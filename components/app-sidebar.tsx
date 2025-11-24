@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import AppSidebarProducts from "./app-sidebar-products";
+import { ShoppingBag } from "lucide-react";
 
 const data = {
   user: {
@@ -140,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <Link href="/admin">
-                <IconInnerShadowTop className="size-5!" />
+                <ShoppingBag className="size-5!" />
                 <span className="text-base font-semibold">Nextstore</span>
               </Link>
             </SidebarMenuButton>

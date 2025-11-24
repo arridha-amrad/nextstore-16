@@ -33,10 +33,18 @@ export default function SigninForm({
   const [showVerify, setShowVerify] = useState(false);
   const [isSendVerification, setIsSendVerification] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const resetState = () => {
+    setMessage(null);
+    setError(null);
+  };
 
   const resendVerification = async () => {
     const email = localStorage.getItem("email");
     if (!email) return;
+    resetState();
+    const id = toast.loading("sending...");
     await sendVerificationEmail(
       {
         email,
@@ -47,20 +55,15 @@ export default function SigninForm({
           setIsSendVerification(true);
         },
         onError: ({ error }) => {
-          setShowVerify(false);
-          toast.error(error.message, {
-            duration: 3000,
-            position: "bottom-center",
-          });
+          setError(error.message || "Something went wrong");
         },
         onSuccess: () => {
-          setShowVerify(false);
           setMessage(
             `An email has been sent to ${email}. Please follow the instructions to verify your email`
           );
         },
         onResponse: () => {
-          setIsSendVerification(false);
+          toast.dismiss(id);
         },
       }
     );
@@ -76,6 +79,8 @@ export default function SigninForm({
     },
     onSubmit: async ({ value }) => {
       const { email, password } = value;
+      setMessage(null);
+      setError(null);
       await signIn.email(
         {
           email,
@@ -86,15 +91,12 @@ export default function SigninForm({
             router.push("/");
           },
           onError: ({ error }) => {
-            localStorage.setItem("email", email);
             if (error.status === 403) {
+              localStorage.setItem("email", email);
               setShowVerify(true);
               return;
             }
-            toast.error(error.message || "Something went wrong.", {
-              duration: 3000,
-              position: "bottom-center",
-            });
+            setError(error.message || "Something went wrong.");
           },
         }
       );
@@ -106,7 +108,11 @@ export default function SigninForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
+          <CardDescription
+            className={cn(
+              message ? "text-green-500" : error ? "text-red-500" : ""
+            )}
+          >
             {showVerify ? (
               <div className="mb-4 text-center text-red-400 text-sm">
                 Verification required.
@@ -117,19 +123,15 @@ export default function SigninForm({
                   size="sm"
                   variant="ghost"
                 >
-                  {isSendVerification && <Spinner />}
                   Click here
                 </Button>
                 to resend verification email.
               </div>
-            ) : true ? (
-              <p className="text-sm text-center text-green-500">{message}</p>
             ) : (
-              " Login with your Apple or Google account"
+              message ?? error ?? " Login with your Apple or Google account"
             )}
           </CardDescription>
         </CardHeader>
-
         <CardContent>
           <form
             onSubmit={(e) => {

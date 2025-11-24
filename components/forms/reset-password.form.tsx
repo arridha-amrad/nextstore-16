@@ -9,14 +9,23 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form/useFormHooks";
+import { resetPassword } from "@/lib/auth-client";
 import { resetPasswordSchema } from "@/lib/schema.zod";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ResetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const sp = useSearchParams();
+
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
   const form = useAppForm({
     defaultValues: {
       password: "",
@@ -25,8 +34,28 @@ export default function ResetPasswordForm({
     validators: {
       onSubmit: resetPasswordSchema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value, formApi }) => {
       console.log({ value });
+      const token = sp.get("token");
+      if (!token) {
+        toast.error("token is missing");
+        return;
+      }
+      await resetPassword(
+        {
+          newPassword: value.password,
+          token,
+        },
+        {
+          onSuccess: ({}) => {
+            setMessage("Reset password is successful");
+            formApi.reset();
+          },
+          onError: ({ error }) => {
+            setError(error.message || "Something went wrong");
+          },
+        }
+      );
     },
   });
 
@@ -35,8 +64,12 @@ export default function ResetPasswordForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Reset Password</CardTitle>
-          <CardDescription>
-            Return your account with a new password
+          <CardDescription
+            className={cn(
+              message ? "text-green-500" : error ? "text-red-500" : ""
+            )}
+          >
+            {message ?? error ?? "Return your account with a new password"}
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -18,13 +18,15 @@ import { signUp } from "@/lib/auth-client";
 import { signupSchema } from "@/lib/schema.zod";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { useState } from "react";
 import GoogleAuthButton from "../buttons/google-auth.button";
 
 export default function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const form = useAppForm({
     defaultValues: {
       name: "",
@@ -36,7 +38,6 @@ export default function SignupForm({
       onSubmit: signupSchema,
     },
     onSubmit: async ({ value, formApi }) => {
-      formApi.reset();
       const { email, name, password } = value;
       await signUp.email(
         {
@@ -47,19 +48,13 @@ export default function SignupForm({
         },
         {
           onSuccess: () => {
-            toast.success(
-              "signup successful. please check your email inbox to verify your email.",
-              {
-                duration: 5000,
-                position: "bottom-center",
-              }
+            setMessage(
+              `An email has been sent to ${email}. Please follow the instructions to verify your email`
             );
+            formApi.reset();
           },
           onError: ({ error }) => {
-            toast.error(error.message || "Something went wrong.", {
-              duration: 3000,
-              position: "bottom-center",
-            });
+            setError(error.message || "Something went wrong");
           },
         }
       );
@@ -71,8 +66,14 @@ export default function SignupForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Create your account</CardTitle>
-          <CardDescription>
-            Fill in the form below to create your account
+          <CardDescription
+            className={cn(
+              message ? "text-green-500" : error ? "text-red-500" : ""
+            )}
+          >
+            {message ??
+              error ??
+              "Fill in the form below to create your account"}
           </CardDescription>
         </CardHeader>
         <CardContent>

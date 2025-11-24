@@ -10,6 +10,7 @@ import {
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form/useFormHooks";
 import { requestPasswordReset } from "@/lib/auth-client";
+import { env } from "@/lib/env";
 import { forgotPasswordSchema } from "@/lib/schema.zod";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -20,6 +21,7 @@ export default function ForgotPasswordForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -31,12 +33,17 @@ export default function ForgotPasswordForm({
       await requestPasswordReset(
         {
           email,
-          redirectTo: "http://localhost:3000/reset-password",
+          redirectTo: `${env.baseUrl}/reset-password`,
         },
         {
           onSuccess: () => {
-            setMessage("Please check your email inbox");
+            setMessage(
+              `An email has been sent to ${email}. Please follow the instruction to reset your password`
+            );
             formApi.reset();
+          },
+          onError: ({ error }) => {
+            setError(error.message || "Something went wrong");
           },
         }
       );
@@ -48,8 +55,12 @@ export default function ForgotPasswordForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Forgot Password</CardTitle>
-          <CardDescription>
-            Send a request to change your password
+          <CardDescription
+            className={cn(
+              message ? "text-green-500" : error ? "text-red-500" : ""
+            )}
+          >
+            {message ?? error ?? "Send a request to change your password"}
           </CardDescription>
         </CardHeader>
         <CardContent>
