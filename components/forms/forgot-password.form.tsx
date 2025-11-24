@@ -9,14 +9,17 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form/useFormHooks";
+import { requestPasswordReset } from "@/lib/auth-client";
 import { forgotPasswordSchema } from "@/lib/schema.zod";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function ForgotPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [message, setMessage] = useState<string | null>(null);
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -24,8 +27,19 @@ export default function ForgotPasswordForm({
     validators: {
       onSubmit: forgotPasswordSchema,
     },
-    onSubmit: async ({ value }) => {
-      console.log({ value });
+    onSubmit: async ({ value: { email }, formApi }) => {
+      await requestPasswordReset(
+        {
+          email,
+          redirectTo: "http://localhost:3000/reset-password",
+        },
+        {
+          onSuccess: () => {
+            setMessage("Please check your email inbox");
+            formApi.reset();
+          },
+        }
+      );
     },
   });
 

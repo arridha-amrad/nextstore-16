@@ -14,11 +14,12 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form/useFormHooks";
-import { cn } from "@/lib/utils";
+import { signUp } from "@/lib/auth-client";
 import { signupSchema } from "@/lib/schema.zod";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-import GoogleAuthButton from "../buttons/google-auth.button";
 import toast from "react-hot-toast";
+import GoogleAuthButton from "../buttons/google-auth.button";
 
 export default function SignupForm({
   className,
@@ -35,9 +36,33 @@ export default function SignupForm({
       onSubmit: signupSchema,
     },
     onSubmit: async ({ value, formApi }) => {
-      console.log(value);
       formApi.reset();
-      toast.success("signup successful");
+      const { email, name, password } = value;
+      await signUp.email(
+        {
+          email,
+          name,
+          password,
+          callbackURL: "/",
+        },
+        {
+          onSuccess: () => {
+            toast.success(
+              "signup successful. please check your email inbox to verify your email.",
+              {
+                duration: 5000,
+                position: "bottom-center",
+              }
+            );
+          },
+          onError: ({ error }) => {
+            toast.error(error.message || "Something went wrong.", {
+              duration: 3000,
+              position: "bottom-center",
+            });
+          },
+        }
+      );
     },
   });
 
