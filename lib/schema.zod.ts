@@ -40,15 +40,3 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
     error: "Password do not match",
   });
-
-export const addProductSchema = z.object({
-  title: z.string().min(1, "title required"),
-  stock: z.number().gt(0, "must greater than 0"),
-  price: z.number().gt(0, "must greater than 0"),
-  discount: z.number().min(0, "min 0").max(100, "max 100"),
-  description: z.string().min(1, "description is required"),
-  category: z.string().min(1, "category is required"),
-  images: z
-    .array(z.url("must be an url"))
-    .min(1, "at least an image is required"),
-});

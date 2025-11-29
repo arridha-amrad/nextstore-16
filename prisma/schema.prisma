@@ -76,3 +76,38 @@ model Verification {
   @@index([identifier])
   @@map("verifications")
 }
+
+model Product {
+  id            String           @id @default(cuid())
+  name          String
+  categoryId    BigInt?
+  category      ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  slug          String           @unique
+  price         Float            @db.DoublePrecision
+  stock         Int
+  discount      Int              @default(0) @db.Integer
+  description   String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  productImages ProductImage[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        BigInt  @id @default(autoincrement())
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model ProductCategory {
+  id       BigInt    @id @default(autoincrement())
+  title    String    @unique
+  products Product[]
+
+  @@map("product_categories")
+}

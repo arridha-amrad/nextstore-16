@@ -15,7 +15,7 @@ export function ThemeProvider({
       disableTransitionOnChange
     >
       {children}
-      <Toaster position="top-right" />
+      <Toaster position="bottom-right" />
     </NextThemesProvider>
   );
 }

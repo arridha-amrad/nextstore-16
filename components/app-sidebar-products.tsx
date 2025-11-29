@@ -2,7 +2,7 @@
 
 import { IconListDetails } from "@tabler/icons-react";
 import { ChevronRight, PencilLine, Plus } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Collapsible,
   CollapsibleContent,
@@ -16,6 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
+import { useRouter } from "nextjs-toploader/app";
 
 const nav = {
   title: "Products",
@@ -34,6 +35,11 @@ const nav = {
       title: "Edit Product",
       url: "/admin/products/edit-product",
       icon: PencilLine,
+    },
+    {
+      title: "Add Category",
+      url: "/admin/products/add-category",
+      icon: Plus,
     },
   ],
 };
