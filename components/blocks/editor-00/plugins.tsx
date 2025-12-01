@@ -15,6 +15,7 @@ import { FormatParagraph } from "@/components/editor/plugins/toolbar/block-forma
 import { FormatQuote } from "@/components/editor/plugins/toolbar/block-format/format-quote";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
+import { FontFormatToolbarPlugin } from "@/components/editor/plugins/toolbar/font-format-toolbar-plugin";
 
 export function Plugins() {
   const [floatingAnchorElem, setFloatingAnchorElem] =
@@ -40,6 +41,7 @@ export function Plugins() {
               <FormatCheckList />
               <FormatQuote />
             </BlockFormatDropDown>
+            <FontFormatToolbarPlugin />
           </div>
         )}
       </ToolbarPlugin>

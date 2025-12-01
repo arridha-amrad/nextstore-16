@@ -32,11 +32,6 @@ const nav = {
       icon: Plus,
     },
     {
-      title: "Edit Product",
-      url: "/admin/products/edit-product",
-      icon: PencilLine,
-    },
-    {
       title: "Add Category",
       url: "/admin/products/add-category",
       icon: Plus,

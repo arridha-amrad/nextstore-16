@@ -6,6 +6,9 @@ export type ProductModel = {
   price: number;
   stock: number;
   discount: number;
-  description: string;
+  description: {
+    html: string | null;
+    json: string | null;
+  };
   images: string[];
 };

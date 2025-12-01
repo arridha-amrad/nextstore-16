@@ -5,26 +5,17 @@ import {
   LexicalComposer,
 } from "@lexical/react/LexicalComposer";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { EditorState, SerializedEditorState } from "lexical";
+import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
 
 import { editorTheme } from "@/components/editor/themes/editor-theme";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { nodes } from "./nodes";
 import { Plugins } from "./plugins";
-import { Suspense } from "react";
+import { Ref, RefObject, Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
 
 import { $generateHtmlFromNodes } from "@lexical/html";
-
-const editorConfig: InitialConfigType = {
-  namespace: "Editor",
-  theme: editorTheme,
-  nodes,
-  onError: (error: Error) => {
-    console.error(error);
-  },
-};
 
 export function Editor({
   editorState,
@@ -32,13 +23,23 @@ export function Editor({
   onChange,
   onSerializedChange,
   htmlSetter,
+  editorRef,
 }: {
   htmlSetter: (s: string) => void;
   editorState?: EditorState;
   editorSerializedState?: SerializedEditorState;
   onChange?: (editorState: EditorState) => void;
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void;
+  editorRef: RefObject<LexicalEditor | null>;
 }) {
+  const editorConfig: InitialConfigType = {
+    namespace: "Editor",
+    theme: editorTheme,
+    nodes,
+    onError: (error: Error) => {
+      console.error(error);
+    },
+  };
   return (
     <div className="bg-background overflow-hidden rounded-lg border shadow">
       <Suspense fallback={<Spinner />}>
@@ -57,6 +58,7 @@ export function Editor({
             <OnChangePlugin
               ignoreSelectionChange={true}
               onChange={(editorState, editor) => {
+                editorRef.current = editor;
                 onChange?.(editorState);
                 editorState.read(() => {
                   const xx = $generateHtmlFromNodes(editor);

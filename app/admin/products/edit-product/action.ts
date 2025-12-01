@@ -2,22 +2,11 @@
 
 import { cacheKeys } from "@/cache-keys";
 import prisma from "@/lib/prisma";
-import { actionClient, MyCustomError } from "@/lib/safe-action";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
+import { actionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
 import { updateTag } from "next/cache";
-import { z } from "zod";
+import z from "zod";
 import { zfd } from "zod-form-data";
-
-const slugify = (input: string): string => {
-  return input
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .replace(/-{2,}/g, "-");
-};
 
 const inputSchema = zfd.formData({
   name: zfd.text(z.string().min(1, { error: "required" })),
@@ -33,29 +22,34 @@ const inputSchema = zfd.formData({
   image4: zfd.text(z.url({ error: "invalid url" }).optional()),
 });
 
-export const addProductAction = actionClient
+export const editProductAction = actionClient
+  .bindArgsSchemas<[productId: z.ZodString]>([z.string()])
   .inputSchema(inputSchema, {
     handleValidationErrorsShape: async (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(
     async ({
+      bindArgsParsedInputs: [productId],
       parsedInput: {
+        category,
+        descriptionHtml,
+        descriptionJson,
         discount,
         image1,
+        name,
         price,
         stock,
         image2,
         image3,
         image4,
-        descriptionHtml,
-        descriptionJson,
-        category,
-        name,
       },
     }) => {
       try {
-        await prisma.product.create({
+        await prisma.product.update({
+          where: {
+            id: productId,
+          },
           data: {
             name,
             price,
@@ -63,8 +57,10 @@ export const addProductAction = actionClient
             descriptionHtml,
             descriptionJson,
             discount,
-            slug: slugify(name),
             productImages: {
+              deleteMany: {
+                productId,
+              },
               create: [image1, image2, image3, image4]
                 .filter((v) => typeof v === "string")
                 .map((img) => ({
@@ -80,13 +76,10 @@ export const addProductAction = actionClient
           },
         });
         updateTag(cacheKeys.products);
+        updateTag(cacheKeys.product(productId));
+        return "updated";
       } catch (err) {
-        if (
-          err instanceof PrismaClientKnownRequestError &&
-          err.code === "P2002"
-        ) {
-          throw new MyCustomError("product already exists");
-        }
+        console.log(err);
         throw err;
       }
     }

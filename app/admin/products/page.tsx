@@ -1,5 +1,4 @@
 import { DataTable } from "@/components/data-table";
-import { Spinner } from "@/components/ui/spinner";
 import { fetchProductsForAdmin } from "@/queries/products/fetchProductForAdmin";
 import { Metadata } from "next";
 import { cacheTag } from "next/cache";
@@ -20,7 +19,7 @@ export default async function ProductsAdminPage() {
   const products = await fetchProducts();
   return (
     <>
-      <Suspense fallback={<Spinner />}>
+      <Suspense>
         <DataTable data={products} />
       </Suspense>
     </>

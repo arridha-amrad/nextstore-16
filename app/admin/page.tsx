@@ -3,6 +3,8 @@ import { DataTable } from "@/components/data-table";
 
 import data from "./data.json";
 import { SectionCards } from "@/components/section-cards";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function AdminPage() {
   return (
@@ -11,7 +13,9 @@ export default function AdminPage() {
       <div className="px-4 lg:px-6">
         <ChartAreaInteractive />
       </div>
-      <DataTable data={data} />
+      {/* <Suspense fallback={<Spinner />}>
+        <DataTable data={data} />
+      </Suspense> */}
     </>
   );
 }
