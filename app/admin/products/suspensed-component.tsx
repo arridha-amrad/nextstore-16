@@ -8,7 +8,7 @@ const LIMIT = 10;
 
 const fetchProducts = async (page: number) => {
   "use cache";
-  cacheTag(cacheKeys.products);
+  cacheTag(cacheKeys.products.admin);
 
   const result = await prisma.product.findMany({
     orderBy: {
@@ -46,10 +46,6 @@ const fetchProducts = async (page: number) => {
   }));
 
   return final;
-};
-
-const totalPage = async () => {
-  return prisma.product.count();
 };
 
 export default async function AdminProductsSuspenseComponent({

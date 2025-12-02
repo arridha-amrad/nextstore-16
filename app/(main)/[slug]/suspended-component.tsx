@@ -1,7 +1,7 @@
 import { formatToIDR } from "@/lib/utils";
 import { ProductCarousel } from "./product-carousel";
+import { AddToCartButton, Quantity } from "./product-details";
 import { fetchProductBySlug } from "./query";
-import { Badge } from "@/components/ui/badge";
 
 export default async function SuspendedComponent({
   slug,
@@ -20,22 +20,26 @@ export default async function SuspendedComponent({
       </div>
       <div className="flex-2">
         <h1 className="text-2xl">{product.name}</h1>
-        <div className="flex items-center gap-4">
-          <h2 className="font-bold mt-2 text-2xl">
+        <div className="flex items-center gap-4 mt-4">
+          <h2 className="font-bold text-2xl">
             {formatToIDR(
               product.price - (product.price * product.discount) / 100
             )}
           </h2>
           {product.discount > 0 && (
-            <div className="flex items-center gap-4">
-              <h2 className="font-bold line-through text-foreground/30 mt-2 text-2xl">
+            <div className="flex items-center gap-x-4">
+              <h2 className="font-bold line-through text-foreground/30 text-2xl">
                 {formatToIDR(product.price)}
               </h2>
-              <Badge className="mt-2" variant="destructive">
-                {product.discount}% off
-              </Badge>
+              <h2 className="font-bold text-destructive">
+                {product.discount}%
+              </h2>
             </div>
           )}
+        </div>
+        <div className="flex items-center mt-4 gap-4">
+          <Quantity />
+          <AddToCartButton />
         </div>
         {product.descriptionHtml && (
           <div

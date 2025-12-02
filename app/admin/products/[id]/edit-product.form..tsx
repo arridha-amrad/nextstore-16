@@ -72,7 +72,9 @@ export default function EditProductForm({ categories, product }: Props) {
 
   const editorRef = useRef<LexicalEditor | null>(null);
 
-  const [imgCounter, setImgCounter] = useState(product.images.length);
+  const [imgCounter, setImgCounter] = useState(
+    product.images.length === 0 ? 1 : product.images.length
+  );
 
   const [descriptionHtml, setDescriptionHtml] = useState(
     product.description.html ?? ""
