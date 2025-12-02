@@ -1,23 +1,21 @@
 "use client";
 
+import { addCategoryAction } from "@/app/admin/products/add-category/action";
+import { Minus, PlusIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { ChangeEvent, useState } from "react";
-import { InputField } from "../input-field";
-import { Button } from "../ui/button";
+import toast from "react-hot-toast";
+import { InputField } from "@/components/input-field";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
   CardContent,
   CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { FieldGroup } from "../ui/field";
-import { useAction } from "next-safe-action/hooks";
-import { addCategoryAction } from "@/app/admin/products/add-category/action";
-import toast from "react-hot-toast";
-import { Minus, PlusIcon } from "lucide-react";
+} from "@/components/ui/card";
+import { FieldGroup } from "@/components/ui/field";
 
-const max = 10;
+const max = 5;
 const min = 1;
 
 const initState = {
@@ -26,51 +24,29 @@ const initState = {
   cat3: "",
   cat4: "",
   cat5: "",
-  cat6: "",
-  cat7: "",
-  cat8: "",
-  cat9: "",
-  cat10: "",
 };
 
 export default function AddCategoryForm() {
   const [state, setState] = useState(initState);
   const [counter, setCounter] = useState(min);
   const {
-    execute,
+    executeAsync,
     result: { validationErrors: ve },
   } = useAction(addCategoryAction, {
     onError(args) {
       console.log(args);
     },
-    onSuccess: () => {
-      toast.success("new category added");
+    onSuccess() {
       setState(initState);
     },
   });
-  const cats = [
-    state.cat1,
-    state.cat2,
-    state.cat3,
-    state.cat4,
-    state.cat5,
-    state.cat6,
-    state.cat7,
-    state.cat8,
-    state.cat9,
-    state.cat10,
-  ];
+  const cats = [state.cat1, state.cat2, state.cat3, state.cat4, state.cat5];
   const errors = [
     ve?.cat1?.[0],
     ve?.cat2?.[0],
     ve?.cat3?.[0],
     ve?.cat4?.[0],
     ve?.cat5?.[0],
-    ve?.cat6?.[0],
-    ve?.cat7?.[0],
-    ve?.cat8?.[0],
-    ve?.cat9?.[0],
-    ve?.cat10?.[0],
   ];
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -78,12 +54,16 @@ export default function AddCategoryForm() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const action = async (fd: FormData) => {
+    const result = await executeAsync(fd);
+    if (result.data) {
+      toast.success("new category added");
+    }
+  };
   return (
-    <form action={execute}>
+    <form action={action}>
       <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Add Category</CardTitle>
-        </CardHeader>
         <CardContent>
           <FieldGroup>
             {Array.from({ length: counter }).map((_, i) => (
@@ -106,7 +86,7 @@ export default function AddCategoryForm() {
                 onClick={() => setCounter((val) => (val += 1))}
               >
                 <PlusIcon />
-                More Image
+                More Category Field
               </Button>
               <Button
                 type="button"
@@ -115,7 +95,7 @@ export default function AddCategoryForm() {
                 onClick={() => setCounter((val) => (val -= 1))}
               >
                 <Minus />
-                Remove Image
+                Remove Category Field
               </Button>
             </div>
           </FieldGroup>

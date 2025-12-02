@@ -1,6 +1,6 @@
 "use client";
 
-import { editProductAction } from "@/app/admin/products/edit-product/action";
+import { addProductAction } from "@/app/admin/products/add-product/action";
 import {
   Command,
   CommandEmpty,
@@ -16,8 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { ProductCategory } from "@/lib/generated/prisma/client";
 import { cn } from "@/lib/utils";
-import { ProductModel } from "@/models/product.model";
-import { LexicalEditor, SerializedEditorState } from "lexical";
+import { $getRoot, LexicalEditor, SerializedEditorState } from "lexical";
 import { Check, ChevronsUpDown, Minus, PlusIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
@@ -30,27 +29,23 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { Editor } from "../blocks/editor-00/editor";
-import SubmitButton from "../buttons/submit.button";
-import { InputField } from "../input-field";
-import { Button } from "../ui/button";
+import { Editor } from "@/components/blocks/editor-00/editor";
+import SubmitButton from "@/components/buttons/submit.button";
+import { InputField } from "@/components/input-field";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
   CardContent,
   CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Field, FieldGroup } from "../ui/field";
-import { Label } from "../ui/label";
-import { useSearchParams } from "next/navigation";
+} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
 
 const maxImageField = 4;
 
 type Props = {
   categories: ProductCategory[];
-  product: ProductModel;
 };
 
 const initState = {
@@ -65,41 +60,8 @@ const initState = {
   image4: "",
 };
 
-export default function EditProductForm({ categories, product }: Props) {
-  const {
-    id,
-    category,
-    images: imgs,
-    description: { json: descriptionJson, html },
-    discount,
-    name,
-    price,
-    stock,
-  } = product;
-
+export default function AddProductForm({ categories }: Props) {
   const [state, setState] = useState(initState);
-  useEffect(() => {
-    console.log(product);
-
-    setState({
-      name,
-      category,
-      discount,
-      price,
-      stock,
-      image1: imgs[0],
-      image2: imgs[1] ?? "",
-      image3: imgs[2] ?? "",
-      image4: imgs[3] ?? "",
-    });
-
-    setCategoryValue(category);
-
-    setEditorState(descriptionJson && JSON.parse(descriptionJson));
-
-    setDescriptionHtml(html ?? "");
-  }, [id]);
-
   const [categoryValue, setCategoryValue] = useState("");
   const [editorState, setEditorState] = useState<
     SerializedEditorState | undefined
@@ -107,7 +69,7 @@ export default function EditProductForm({ categories, product }: Props) {
 
   const editorRef = useRef<LexicalEditor | null>(null);
 
-  const [descriptionHtml, setDescriptionHtml] = useState(html ?? "");
+  const [descriptionHtml, setDescriptionHtml] = useState("");
 
   useEffect(() => {
     if (categoryValue !== "") {
@@ -118,13 +80,16 @@ export default function EditProductForm({ categories, product }: Props) {
     }
   }, [categoryValue]);
 
-  const [imgCounter, setImgCounter] = useState(imgs.length);
+  const [imgCounter, setImgCounter] = useState(1);
+
   const addMoreImageField = () => {
     setImgCounter((val) => (val += 1));
   };
+
   const popImageField = () => {
     setImgCounter((val) => (val -= 1));
   };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
@@ -133,10 +98,11 @@ export default function EditProductForm({ categories, product }: Props) {
   };
 
   const {
-    execute,
+    executeAsync,
     result: { validationErrors: ve },
     isPending,
-  } = useAction(editProductAction.bind(null, id), {
+    reset,
+  } = useAction(addProductAction, {
     onError(args) {
       console.log(args);
       if (args.error.serverError) {
@@ -144,10 +110,19 @@ export default function EditProductForm({ categories, product }: Props) {
         return;
       }
     },
-    onSuccess(args) {
-      toast.success(args.data);
+    onSuccess() {
+      setState(initState);
+      editorRef.current?.update(() => {
+        $getRoot().clear();
+      });
+      setCategoryValue("");
+      setDescriptionHtml("");
     },
   });
+
+  useEffect(() => {
+    return () => reset();
+  }, []);
 
   const images = [state.image1, state.image2, state.image3, state.image4];
   const errors = [
@@ -161,15 +136,15 @@ export default function EditProductForm({ categories, product }: Props) {
     fd.append("category", state.category);
     fd.append("descriptionJson", JSON.stringify(editorState));
     fd.append("descriptionHtml", descriptionHtml);
-    execute(fd);
+    const result = await executeAsync(fd);
+    if (result.data) {
+      toast.success("new product added");
+    }
   };
 
   return (
     <form action={action}>
       <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Edit Product</CardTitle>
-        </CardHeader>
         <CardContent>
           <FieldGroup>
             <InputField
@@ -257,7 +232,7 @@ export default function EditProductForm({ categories, product }: Props) {
         </CardContent>
         <CardFooter>
           <CardAction>
-            <SubmitButton isLoading={isPending} label="Edit Product" />
+            <SubmitButton isLoading={isPending} label="Add Product" />
           </CardAction>
         </CardFooter>
       </Card>
@@ -269,7 +244,7 @@ export function CategoryCombobox({
   categories,
   setValue,
   value,
-}: Omit<Props, "product"> & {
+}: Props & {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
 }) {

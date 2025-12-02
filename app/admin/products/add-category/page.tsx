@@ -1,4 +1,4 @@
-import AddCategoryForm from "@/components/forms/add-category.form";
+import AddCategoryForm from "@/app/admin/products/add-category/add-category.form";
 
 export default function AddCategoryAdminPage() {
   return (

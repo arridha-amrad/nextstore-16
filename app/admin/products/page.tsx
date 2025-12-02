@@ -1,27 +1,32 @@
-import { DataTable } from "@/components/data-table";
-import { fetchProductsForAdmin } from "@/queries/products/fetchProductForAdmin";
+import { SearchParamsProps } from "@/types";
 import { Metadata } from "next";
-import { cacheTag } from "next/cache";
 import { Suspense } from "react";
+import AdminProductsSuspenseComponent from "./suspensed-component";
 
 export const metadata: Metadata = {
   title: "Admin Nextstore | Products",
   description: "List of product of nextstore",
 };
 
-const fetchProducts = async () => {
-  "use cache";
-  cacheTag("products");
-  return fetchProductsForAdmin();
-};
+export default async function ProductsAdminPage({
+  searchParams,
+}: SearchParamsProps) {
+  const page = searchParams.then((sp) => {
+    if (typeof sp.page !== "string") {
+      return 1;
+    }
+    const pageNumber = parseInt(sp.page);
+    if (isNaN(pageNumber)) {
+      return 1;
+    }
+    return pageNumber;
+  }) as Promise<number>;
 
-export default async function ProductsAdminPage() {
-  const products = await fetchProducts();
   return (
-    <>
+    <main className="px-4 lg:px-6">
       <Suspense>
-        <DataTable data={products} />
+        <AdminProductsSuspenseComponent pPage={page} />
       </Suspense>
-    </>
+    </main>
   );
 }

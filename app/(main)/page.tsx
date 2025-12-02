@@ -1,13 +1,24 @@
-import LogoutButton from "@/components/buttons/logout.button";
-import { getServerSession } from "@/lib/auth";
+import { SearchParamsProps } from "@/types";
+import SuspendedComponent from "./suspended-component";
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
-export default async function RootPage() {
-  const session = await getServerSession();
-
+export default async function Page({ searchParams }: SearchParamsProps) {
+  const page = searchParams.then((sp) => {
+    if (typeof sp.page !== "string") {
+      return 1;
+    }
+    const pageNumber = parseInt(sp.page);
+    if (isNaN(pageNumber)) {
+      return 1;
+    }
+    return pageNumber;
+  }) as Promise<number>;
   return (
     <main className="container mx-auto">
-      <h1>Hello {session?.user.name ?? ""}</h1>
-      {session && <LogoutButton />}
+      <Suspense fallback={<Spinner />}>
+        <SuspendedComponent page={page} />
+      </Suspense>
     </main>
   );
 }

@@ -19,7 +19,7 @@ import { signupSchema } from "@/lib/schema.zod";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
-import GoogleAuthButton from "../buttons/google-auth.button";
+import GoogleAuthButton from "@/components/buttons/google-auth.button";
 
 export default function SignupForm({
   className,

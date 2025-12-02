@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         hostname: "m.media-amazon.com",
         protocol: "https",
       },
+      {
+        hostname: "p16-images-sign-sg.tokopedia-static.net",
+        protocol: "https",
+      },
     ],
   },
 };

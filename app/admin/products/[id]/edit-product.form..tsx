@@ -1,6 +1,5 @@
 "use client";
 
-import { addProductAction } from "@/app/admin/products/add-product/action";
 import {
   Command,
   CommandEmpty,
@@ -16,58 +15,72 @@ import {
 } from "@/components/ui/popover";
 import { ProductCategory } from "@/lib/generated/prisma/client";
 import { cn } from "@/lib/utils";
-import { $getRoot, LexicalEditor, SerializedEditorState } from "lexical";
+import { ProductModel } from "@/models/product.model";
+import { LexicalEditor, SerializedEditorState } from "lexical";
 import { Check, ChevronsUpDown, Minus, PlusIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
-import * as React from "react";
-import { ChangeEvent, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import toast from "react-hot-toast";
-import { Editor } from "../blocks/editor-00/editor";
-import SubmitButton from "../buttons/submit.button";
-import { InputField } from "../input-field";
-import { Button } from "../ui/button";
+import { Editor } from "@/components/blocks/editor-00/editor";
+import SubmitButton from "@/components/buttons/submit.button";
+import { InputField } from "@/components/input-field";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
   CardContent,
   CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Field, FieldGroup } from "../ui/field";
-import { Label } from "../ui/label";
+} from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { editProductAction } from "@/app/admin/products/[id]/action";
 
 const maxImageField = 4;
 
 type Props = {
   categories: ProductCategory[];
+  product: ProductModel;
 };
 
-const initState = {
-  name: "",
-  category: "",
-  stock: 0,
-  price: 0,
-  discount: 0,
-  image1: "",
-  image2: "",
-  image3: "",
-  image4: "",
-};
+export default function EditProductForm({ categories, product }: Props) {
+  const [state, setState] = useState({
+    name: product.name,
+    category: product.category,
+    discount: product.discount,
+    price: product.price,
+    stock: product.stock,
+    image1: product.images[0],
+    image2: product.images[1] ?? "",
+    image3: product.images[2] ?? "",
+    image4: product.images[3] ?? "",
+  });
 
-export default function AddProductForm({ categories }: Props) {
-  const [state, setState] = useState(initState);
-  const [categoryValue, setCategoryValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState(product.category);
+
   const [editorState, setEditorState] = useState<
     SerializedEditorState | undefined
-  >(undefined);
+  >(product.description.json && JSON.parse(product.description.json));
 
-  const editorRef = React.useRef<LexicalEditor | null>(null);
+  const editorRef = useRef<LexicalEditor | null>(null);
 
-  const [descriptionHtml, setDescriptionHtml] = useState("");
+  const [imgCounter, setImgCounter] = useState(product.images.length);
 
-  React.useEffect(() => {
+  const [descriptionHtml, setDescriptionHtml] = useState(
+    product.description.html ?? ""
+  );
+
+  const router = useRouter();
+
+  useEffect(() => {
     if (categoryValue !== "") {
       setState({
         ...state,
@@ -76,13 +89,14 @@ export default function AddProductForm({ categories }: Props) {
     }
   }, [categoryValue]);
 
-  const [imgCounter, setImgCounter] = useState(1);
   const addMoreImageField = () => {
     setImgCounter((val) => (val += 1));
   };
+
   const popImageField = () => {
     setImgCounter((val) => (val -= 1));
   };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
@@ -91,24 +105,14 @@ export default function AddProductForm({ categories }: Props) {
   };
 
   const {
-    execute,
+    executeAsync,
     result: { validationErrors: ve },
     isPending,
-  } = useAction(addProductAction, {
+  } = useAction(editProductAction.bind(null, product.id), {
     onError(args) {
-      console.log(args);
       if (args.error.serverError) {
         toast.error(args.error.serverError);
-        return;
       }
-    },
-    onSuccess() {
-      setState(initState);
-      editorRef.current?.update(() => {
-        $getRoot().clear();
-      });
-      setDescriptionHtml("");
-      toast.success("new product added");
     },
   });
 
@@ -120,19 +124,20 @@ export default function AddProductForm({ categories }: Props) {
     ve?.image4?.[0],
   ];
 
+  const action = async (fd: FormData) => {
+    fd.append("category", state.category);
+    fd.append("descriptionJson", JSON.stringify(editorState));
+    fd.append("descriptionHtml", descriptionHtml);
+    const result = await executeAsync(fd);
+    if (result.data) {
+      toast.success("updated");
+      router.refresh();
+    }
+  };
+
   return (
-    <form
-      action={(fd) => {
-        fd.append("category", state.category);
-        fd.append("descriptionJson", JSON.stringify(editorState));
-        fd.append("descriptionHtml", descriptionHtml);
-        execute(fd);
-      }}
-    >
+    <form action={action}>
       <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Add Product</CardTitle>
-        </CardHeader>
         <CardContent>
           <FieldGroup>
             <InputField
@@ -220,7 +225,7 @@ export default function AddProductForm({ categories }: Props) {
         </CardContent>
         <CardFooter>
           <CardAction>
-            <SubmitButton isLoading={isPending} label="Add Product" />
+            <SubmitButton isLoading={isPending} label="Edit Product" />
           </CardAction>
         </CardFooter>
       </Card>
@@ -232,11 +237,11 @@ export function CategoryCombobox({
   categories,
   setValue,
   value,
-}: Props & {
+}: Omit<Props, "product"> & {
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: Dispatch<SetStateAction<string>>;
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <Field>

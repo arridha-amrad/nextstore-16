@@ -1,5 +1,7 @@
 "use client";
 
+import GoogleAuthButton from "@/components/buttons/google-auth.button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,16 +16,13 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/form/useFormHooks";
-import { cn } from "@/lib/utils";
-import { signinSchema } from "@/lib/schema.zod";
-import GoogleAuthButton from "../buttons/google-auth.button";
-import Link from "next/link";
 import { sendVerificationEmail, signIn } from "@/lib/auth-client";
+import { signinSchema } from "@/lib/schema.zod";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Button } from "../ui/button";
-import { Spinner } from "../ui/spinner";
 
 export default function SigninForm({
   className,
@@ -128,7 +127,7 @@ export default function SigninForm({
                 to resend verification email.
               </div>
             ) : (
-              message ?? error ?? " Login with your Apple or Google account"
+              message ?? error ?? " Login with your Email or Google account"
             )}
           </CardDescription>
         </CardHeader>
@@ -140,7 +139,7 @@ export default function SigninForm({
               form.handleSubmit();
             }}
           >
-            <FieldGroup className="gap-y-4">
+            <FieldGroup>
               <form.AppField
                 name="email"
                 children={(field) => (
@@ -159,6 +158,9 @@ export default function SigninForm({
                   <form.SubmitButton label="Signin" />
                 </form.AppForm>
                 <FieldDescription className="text-center">
+                  <Link href={"/auth/forgot-password"}>forgot password</Link>
+                </FieldDescription>
+                <FieldDescription className="text-center">
                   Don&apos;t have an account?&nbsp;
                   <Link href="/auth/signup">Signup</Link>
                 </FieldDescription>
@@ -174,7 +176,7 @@ export default function SigninForm({
             </FieldGroup>
           </form>
           <div className="mt-4">
-            <FieldDescription className=" text-center">
+            <FieldDescription className="text-center">
               By clicking continue, you agree to our{" "}
               <a href="#">Terms of Service</a> and{" "}
               <a href="#">Privacy Policy</a>.

@@ -3,6 +3,7 @@
 import { cacheKeys } from "@/cache-keys";
 import prisma from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
+import { slugify } from "@/lib/utils";
 import { flattenValidationErrors } from "next-safe-action";
 import { updateTag } from "next/cache";
 import z from "zod";
@@ -52,6 +53,7 @@ export const editProductAction = actionClient
           },
           data: {
             name,
+            slug: slugify(name),
             price,
             stock,
             descriptionHtml,
@@ -75,8 +77,10 @@ export const editProductAction = actionClient
             },
           },
         });
-        updateTag(cacheKeys.products);
-        updateTag(cacheKeys.product(productId));
+        updateTag(cacheKeys.product.admin(productId));
+        updateTag(cacheKeys.products.admin);
+        updateTag(cacheKeys.product.user(productId));
+        updateTag(cacheKeys.products.user);
         return "updated";
       } catch (err) {
         console.log(err);

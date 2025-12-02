@@ -1,6 +1,7 @@
 import Footer from "@/components/footer";
 import { ChildrenProps } from "@/types";
 import { GalleryVerticalEnd } from "lucide-react";
+import { Suspense } from "react";
 
 export default function AuthLayout({ children }: ChildrenProps) {
   return (
@@ -14,7 +15,9 @@ export default function AuthLayout({ children }: ChildrenProps) {
         </div>
         {children}
       </div>
-      <Footer />
+      <Suspense>
+        <Footer />
+      </Suspense>
     </div>
   );
 }

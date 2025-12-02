@@ -8,7 +8,6 @@ import {
   IconFileDescription,
   IconFileWord,
   IconHelp,
-  IconInnerShadowTop,
   IconReport,
   IconSearch,
   IconSettings,
@@ -28,9 +27,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import AppSidebarProducts from "./app-sidebar-products";
-import { ShoppingBag } from "lucide-react";
 
 const data = {
   user: {
@@ -132,31 +131,33 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
-              <Link href="/admin">
-                <ShoppingBag className="size-5!" />
-                <span className="text-base font-semibold">Nextstore</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <AppSidebarProducts />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-    </Sidebar>
+    <React.Suspense>
+      <Sidebar collapsible="offcanvas" {...props}>
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                className="data-[slot=sidebar-menu-button]:p-1.5!"
+              >
+                <Link href="/admin">
+                  <ShoppingBag className="size-5!" />
+                  <span className="text-base font-semibold">Nextstore</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <NavMain items={data.navMain} />
+          <AppSidebarProducts />
+          <NavDocuments items={data.documents} />
+          <NavSecondary items={data.navSecondary} className="mt-auto" />
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+      </Sidebar>
+    </React.Suspense>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { IconBrandGithub } from "@tabler/icons-react";
 
 export default function Footer() {

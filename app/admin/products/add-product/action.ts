@@ -3,21 +3,12 @@
 import { cacheKeys } from "@/cache-keys";
 import prisma from "@/lib/prisma";
 import { actionClient, MyCustomError } from "@/lib/safe-action";
+import { slugify } from "@/lib/utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 import { flattenValidationErrors } from "next-safe-action";
 import { updateTag } from "next/cache";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-
-const slugify = (input: string): string => {
-  return input
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .replace(/-{2,}/g, "-");
-};
 
 const inputSchema = zfd.formData({
   name: zfd.text(z.string().min(1, { error: "required" })),
@@ -79,7 +70,9 @@ export const addProductAction = actionClient
             },
           },
         });
-        updateTag(cacheKeys.products);
+        updateTag(cacheKeys.products.admin);
+        updateTag(cacheKeys.products.user);
+        return "ok";
       } catch (err) {
         if (
           err instanceof PrismaClientKnownRequestError &&

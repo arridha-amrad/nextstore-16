@@ -1,5 +1,10 @@
-import SignupForm from "@/components/forms/signup.form";
+import SignupForm from "@/app/auth/signup/signup.form";
+import { Suspense } from "react";
 
 export default function SignupPage() {
-  return <SignupForm />;
+  return (
+    <Suspense>
+      <SignupForm />;
+    </Suspense>
+  );
 }

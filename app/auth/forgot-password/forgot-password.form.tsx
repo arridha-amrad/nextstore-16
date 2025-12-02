@@ -60,7 +60,7 @@ export default function ForgotPasswordForm({
               message ? "text-green-500" : error ? "text-red-500" : ""
             )}
           >
-            {message ?? error ?? "Send a request to change your password"}
+            {message ?? error ?? "Send a request to renew your password"}
           </CardDescription>
         </CardHeader>
         <CardContent>

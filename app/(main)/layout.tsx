@@ -1,15 +1,14 @@
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
+import { ChildrenProps } from "@/types";
 
-export default function MainLayout() {
+export default function MainLayout({ children }: ChildrenProps) {
   return (
     <div className="container mx-auto">
       <NavigationMenu>
@@ -22,6 +21,7 @@ export default function MainLayout() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+      {children}
     </div>
   );
 }

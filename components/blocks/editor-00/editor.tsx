@@ -6,15 +6,12 @@ import {
 } from "@lexical/react/LexicalComposer";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { EditorState, LexicalEditor, SerializedEditorState } from "lexical";
-
 import { editorTheme } from "@/components/editor/themes/editor-theme";
 import { TooltipProvider } from "@/components/ui/tooltip";
-
+import { Spinner } from "@/components/ui/spinner";
+import { RefObject, Suspense } from "react";
 import { nodes } from "./nodes";
 import { Plugins } from "./plugins";
-import { Ref, RefObject, Suspense } from "react";
-import { Spinner } from "@/components/ui/spinner";
-
 import { $generateHtmlFromNodes } from "@lexical/html";
 
 export function Editor({
@@ -54,7 +51,6 @@ export function Editor({
         >
           <TooltipProvider>
             <Plugins />
-
             <OnChangePlugin
               ignoreSelectionChange={true}
               onChange={(editorState, editor) => {

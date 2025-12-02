@@ -14,11 +14,6 @@ const schema = zfd.formData({
   cat3: zfd.text(z.string().min(1, "required").optional()),
   cat4: zfd.text(z.string().min(1, "required").optional()),
   cat5: zfd.text(z.string().min(1, "required").optional()),
-  cat6: zfd.text(z.string().min(1, "required").optional()),
-  cat7: zfd.text(z.string().min(1, "required").optional()),
-  cat8: zfd.text(z.string().min(1, "required").optional()),
-  cat9: zfd.text(z.string().min(1, "required").optional()),
-  cat10: zfd.text(z.string().min(1, "required").optional()),
 });
 
 export const addCategoryAction = actionClient
@@ -39,4 +34,5 @@ export const addCategoryAction = actionClient
       skipDuplicates: true,
     });
     updateTag(cacheKeys.productCategories);
+    return "ok";
   });
