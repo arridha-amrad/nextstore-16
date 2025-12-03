@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         hostname: "p16-images-sign-sg.tokopedia-static.net",
         protocol: "https",
       },
+      {
+        hostname: "localhost",
+        protocol: "http",
+      },
     ],
   },
 };

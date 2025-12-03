@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "nextjs-toploader/app";
 import { signOut } from "@/lib/auth-client";
+import { getServerSession } from "@/lib/auth";
 
 export function NavbarSearch() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -43,7 +44,11 @@ export function NavbarSearch() {
   );
 }
 
-export function NavbarUserDropDown() {
+export function NavbarUserDropDown({
+  session,
+}: {
+  session: Awaited<ReturnType<typeof getServerSession>>;
+}) {
   const router = useRouter();
   const logout = async () => {
     await signOut();
@@ -54,18 +59,15 @@ export function NavbarUserDropDown() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <User />
-          Arridha Amrad
+          {session?.user.name}
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" asChild>
-          <Button variant={"ghost"} onClick={logout}>
-            <LogOutIcon />
-            Logout
-          </Button>
+        <DropdownMenuItem onClick={logout} variant="destructive">
+          Logout
         </DropdownMenuItem>
         <DropdownMenuItem>Billing</DropdownMenuItem>
         <DropdownMenuItem>Team</DropdownMenuItem>

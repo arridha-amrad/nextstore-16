@@ -19,3 +19,7 @@ export const fetchProductBySlug = async (slug: string) => {
     },
   });
 };
+
+export type TProductDetail = NonNullable<
+  Awaited<ReturnType<typeof fetchProductBySlug>>
+>;

@@ -20,7 +20,7 @@ import { sendVerificationEmail, signIn } from "@/lib/auth-client";
 import { signinSchema } from "@/lib/schema.zod";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -68,6 +68,8 @@ export default function SigninForm({
     );
   };
 
+  const sp = useSearchParams();
+
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -87,7 +89,12 @@ export default function SigninForm({
         },
         {
           onSuccess: () => {
-            router.push("/");
+            const callbackURL = sp.get("callbackUrl");
+            let to = "/";
+            if (callbackURL) {
+              to = callbackURL;
+            }
+            router.push(to);
           },
           onError: ({ error }) => {
             if (error.status === 403) {

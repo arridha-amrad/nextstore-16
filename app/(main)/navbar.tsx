@@ -14,6 +14,7 @@ import { getServerSession } from "@/lib/auth";
 export default async function Navbar() {
   const categories = await fetchCategories();
   const session = await getServerSession();
+  const user = session?.user;
   return (
     <Suspense>
       <nav className="flex h-full items-center py-4 gap-x-6">
@@ -28,7 +29,11 @@ export default async function Navbar() {
             orientation="vertical"
             className="data-[orientation=vertical]:w-0.5 data-[orientation=vertical]:h-1/2"
           />
-          {session ? <NavbarUserDropDown /> : <NavbarAuthButtons />}
+          {session ? (
+            <NavbarUserDropDown session={session} />
+          ) : (
+            <NavbarAuthButtons />
+          )}
         </div>
       </nav>
     </Suspense>
