@@ -18,6 +18,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  cart          Cart?
 
   @@unique([email])
   @@map("users")
@@ -85,6 +86,7 @@ model Product {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   productImages   ProductImage[]
+  cartItems       CartItem[]
 
   @@map("products")
 }
@@ -105,4 +107,27 @@ model ProductCategory {
   products Product[]
 
   @@map("product_categories")
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  cartItems CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cartId])
+  @@map("cart_items")
 }
