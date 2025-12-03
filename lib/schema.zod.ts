@@ -24,7 +24,7 @@ export const signupSchema = z
 
 export const signinSchema = z.object({
   email: emailSchema,
-  password: passwordSchema,
+  password: z.string().min(1, { error: "required" }),
 });
 
 export const forgotPasswordSchema = z.object({

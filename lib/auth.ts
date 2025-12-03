@@ -5,6 +5,7 @@ import { sendEmail } from "./mailer";
 import { cache } from "react";
 import { headers } from "next/headers";
 import { env } from "./env";
+import { hash, verify } from "@node-rs/argon2";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -24,6 +25,10 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 5,
     requireEmailVerification: true,
+    password: {
+      hash: async (password) => await hash(password),
+      verify: async ({ hash, password }) => await verify(hash, password),
+    },
     sendResetPassword: async ({ user, url }) => {
       await sendEmail({
         to: user.email,

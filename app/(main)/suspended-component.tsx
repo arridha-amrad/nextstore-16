@@ -1,3 +1,4 @@
+import { getServerSession } from "@/lib/auth";
 import ProductCard from "./product-card";
 import { fetchProducts } from "./query";
 
@@ -15,6 +16,8 @@ export default async function SuspendedComponent({
   const name = await productName;
 
   const products = await fetchProducts({ page: intPage, category: cat, name });
+
+  const session = await getServerSession();
 
   if (products.length === 0) {
     return <p>product not found</p>;

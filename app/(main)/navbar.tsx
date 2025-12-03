@@ -3,12 +3,17 @@ import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { fetchCategories } from "../admin/products/query";
 import NavCategoriesMenu from "./nav-categories-menu";
-import NavbarAuthButtons from "./navbar-auth-buttons";
-import NavbarSearch from "./navbar-search";
+import {
+  NavbarSearch,
+  NavbarUserDropDown,
+  NavbarAuthButtons,
+} from "./navbar-client-components";
 import { Suspense } from "react";
+import { getServerSession } from "@/lib/auth";
 
 export default async function Navbar() {
   const categories = await fetchCategories();
+  const session = await getServerSession();
   return (
     <Suspense>
       <nav className="flex h-full items-center py-4 gap-x-6">
@@ -23,7 +28,7 @@ export default async function Navbar() {
             orientation="vertical"
             className="data-[orientation=vertical]:w-0.5 data-[orientation=vertical]:h-1/2"
           />
-          <NavbarAuthButtons />
+          {session ? <NavbarUserDropDown /> : <NavbarAuthButtons />}
         </div>
       </nav>
     </Suspense>
