@@ -4,14 +4,34 @@ import { cacheTag } from "next/cache";
 
 const LIMIT = 20;
 
-export const fetchProducts = async (page: number) => {
+type Params = {
+  page: number;
+  category?: string;
+  name?: string;
+};
+
+export const fetchProducts = async ({ page, category, name }: Params) => {
   "use cache";
   cacheTag(cacheKeys.products.user);
+
   const result = await prisma.product.findMany({
     take: LIMIT,
     skip: (page - 1) * LIMIT,
     orderBy: {
       updatedAt: "desc",
+    },
+    where: {
+      ...(category && {
+        category: {
+          title: category,
+        },
+      }),
+      ...(name && {
+        name: {
+          mode: "insensitive",
+          contains: name,
+        },
+      }),
     },
     select: {
       id: true,
@@ -20,6 +40,11 @@ export const fetchProducts = async (page: number) => {
       stock: true,
       slug: true,
       discount: true,
+      category: {
+        select: {
+          title: true,
+        },
+      },
       productImages: {
         select: {
           url: true,
@@ -28,5 +53,7 @@ export const fetchProducts = async (page: number) => {
       },
     },
   });
+  console.log(result.map((c) => c.name));
+
   return result;
 };

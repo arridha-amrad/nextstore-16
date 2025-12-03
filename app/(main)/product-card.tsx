@@ -11,8 +11,6 @@ type Props = {
   product: Awaited<ReturnType<typeof fetchProducts>>[number];
 };
 export default function ProductCard({ product }: Props) {
-  console.log(product);
-
   const router = useRouter();
   return (
     <Card

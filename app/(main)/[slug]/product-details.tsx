@@ -6,13 +6,12 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 export function Quantity() {
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(1);
   return (
     <ButtonGroup>
       <Button
-        disabled={counter <= 1}
         onClick={() => {
-          setCounter((val) => (val -= 1));
+          setCounter((val) => (val === 1 ? val : (val -= 1)));
         }}
         variant={"outline"}
         size={"icon-lg"}
