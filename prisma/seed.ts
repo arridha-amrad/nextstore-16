@@ -1,4 +1,3 @@
-import { env } from "@/lib/env";
 import prisma from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
@@ -69,7 +68,7 @@ async function createProducts() {
 }
 
 async function main() {
-  // await createUsers();
+  await createUsers();
   await createProducts();
 }
 

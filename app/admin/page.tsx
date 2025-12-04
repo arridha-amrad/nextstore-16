@@ -1,6 +1,3 @@
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
-
 import data from "./data.json";
 import { SectionCards } from "@/components/section-cards";
 import { Suspense } from "react";
@@ -10,9 +7,9 @@ export default function AdminPage() {
   return (
     <>
       <SectionCards />
-      <div className="px-4 lg:px-6">
+      {/* <div className="px-4 lg:px-6">
         <ChartAreaInteractive />
-      </div>
+      </div> */}
       {/* <Suspense fallback={<Spinner />}>
         <DataTable data={data} />
       </Suspense> */}

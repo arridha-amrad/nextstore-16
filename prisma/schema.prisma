@@ -119,14 +119,15 @@ model Cart {
 }
 
 model CartItem {
-  id        Int      @id @default(autoincrement())
-  cartId    String
-  cart      Cart     @relation(fields: [cartId], references: [id])
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(nanoid())
+  isSelected Boolean  @default(true)
+  cartId     String
+  cart       Cart     @relation(fields: [cartId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([cartId])
   @@map("cart_items")

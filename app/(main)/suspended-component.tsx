@@ -1,4 +1,5 @@
-import { getServerSession } from "@/lib/auth";
+import ActiveFilter from "./activeFilter";
+import { PaginationProducts } from "./pagination-products";
 import ProductCard from "./product-card";
 import { fetchProducts } from "./query";
 
@@ -15,19 +16,29 @@ export default async function SuspendedComponent({
   const cat = await category;
   const name = await productName;
 
-  const products = await fetchProducts({ page: intPage, category: cat, name });
+  const { data, itemsPerPage, total } = await fetchProducts({
+    page: intPage,
+    category: cat,
+    name,
+  });
 
-  const session = await getServerSession();
-
-  if (products.length === 0) {
+  if (data.length === 0) {
     return <p>product not found</p>;
   }
 
   return (
-    <div className="grid grid-cols-5 gap-4">
-      {products.map((p) => (
-        <ProductCard product={p} key={p.id} />
-      ))}
-    </div>
+    <>
+      <>
+        <ActiveFilter />
+        <div className="grid grid-cols-5 gap-4">
+          {data.map((p) => (
+            <ProductCard product={p} key={p.id} />
+          ))}
+        </div>
+      </>
+      <div className="mt-8">
+        <PaginationProducts itemsPerPage={itemsPerPage} totalRecords={total} />
+      </div>
+    </>
   );
 }

@@ -14,6 +14,10 @@ export function formatToIDR(number: number): string {
   }).format(number);
 }
 
+export function getAfterDiscountPrice(price: number, discount: number) {
+  return Math.ceil(price - (price * discount) / 100);
+}
+
 export const slugify = (input: string): string => {
   return input
     .toLowerCase()

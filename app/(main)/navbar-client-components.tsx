@@ -5,7 +5,13 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from "@/components/ui/input-group";
-import { ChevronDown, LogOutIcon, Search, User } from "lucide-react";
+import {
+  ChevronDown,
+  LogOutIcon,
+  Search,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import Form from "next/form";
 import { useRef } from "react";
 
@@ -21,6 +27,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "nextjs-toploader/app";
 import { signOut } from "@/lib/auth-client";
 import { getServerSession } from "@/lib/auth";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function NavbarSearch() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -88,5 +96,16 @@ export function NavbarAuthButtons() {
         Signup
       </Button>
     </>
+  );
+}
+
+export function NavbarCart() {
+  const pathname = usePathname();
+  const router = useRouter();
+  return (
+    <ShoppingCart
+      className={cn(pathname === "/cart" ? "fill-white" : "")}
+      onClick={() => router.push("/cart")}
+    />
   );
 }

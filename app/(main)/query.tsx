@@ -14,6 +14,22 @@ export const fetchProducts = async ({ page, category, name }: Params) => {
   "use cache";
   cacheTag(cacheKeys.products.user);
 
+  const totalRecords = await prisma.product.count({
+    where: {
+      ...(category && {
+        category: {
+          title: category,
+        },
+      }),
+      ...(name && {
+        name: {
+          mode: "insensitive",
+          contains: name,
+        },
+      }),
+    },
+  });
+
   const result = await prisma.product.findMany({
     take: LIMIT,
     skip: (page - 1) * LIMIT,
@@ -53,7 +69,13 @@ export const fetchProducts = async ({ page, category, name }: Params) => {
       },
     },
   });
-  console.log(result.map((c) => c.name));
 
-  return result;
+  return {
+    data: result,
+    total: totalRecords,
+    itemsPerPage: LIMIT,
+  };
 };
+
+export type Result = Awaited<ReturnType<typeof fetchProducts>>;
+export type Product = Result["data"];

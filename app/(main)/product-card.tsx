@@ -1,14 +1,14 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { fetchProducts } from "./query";
+import { fetchProducts, Product } from "./query";
 import Image from "next/image";
 import { formatToIDR } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "nextjs-toploader/app";
 
 type Props = {
-  product: Awaited<ReturnType<typeof fetchProducts>>[number];
+  product: Product[number];
 };
 export default function ProductCard({ product }: Props) {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function ProductCard({ product }: Props) {
       onClick={() => router.push(`/${product.slug}`)}
     >
       <CardContent className="space-y-2 p-0">
-        <div className="w-full aspect-square">
+        <div className="w-full border aspect-square">
           <Image
             className="object-cover aspect-square object-center"
             alt={product.name}
@@ -27,7 +27,7 @@ export default function ProductCard({ product }: Props) {
             width={400}
           />
         </div>
-        <div className="p-4 space-y-4">
+        <div className="px-4 mt-4 space-y-4">
           <h1 className="line-clamp-2">{product.name}</h1>
           {product.discount > 0 && (
             <div className="flex items-center gap-2">

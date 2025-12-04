@@ -18,6 +18,14 @@ import toast from "react-hot-toast";
 import { addToCartAction } from "./action";
 import { TProductDetail } from "./query";
 import { ChildrenProps } from "@/types";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Image from "next/image";
 
 const ProductDetailContext = createContext<{
   product: TProductDetail;
@@ -44,6 +52,32 @@ const ProductDetail = ({
     <ProductDetailContext.Provider value={{ product, counter, setCounter }}>
       <div className="flex items-start gap-6">{children}</div>
     </ProductDetailContext.Provider>
+  );
+};
+
+ProductDetail.Carousel = ({ images }: { images: string[] }) => {
+  return (
+    <Carousel className="w-full">
+      <CarouselContent>
+        {images.map((v, index) => (
+          <CarouselItem key={index}>
+            <Image
+              className="object-cover w-full aspect-square"
+              src={v}
+              alt={v}
+              width={500}
+              height={500}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      {images.length > 1 && (
+        <>
+          <CarouselPrevious />
+          <CarouselNext />
+        </>
+      )}
+    </Carousel>
   );
 };
 
@@ -139,7 +173,7 @@ ProductDetail.AddToCart = function AddToCart() {
     }
   };
   return (
-    <Button onClick={addToCart}>
+    <Button disabled={counter === 0} onClick={addToCart}>
       <ShoppingCart />
       Add To Cart
     </Button>

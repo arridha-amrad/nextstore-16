@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 export default function MainLayout({ children }: ChildrenProps) {
   return (
-    <div className="container mx-auto h-24">
+    <div className="container mx-auto p-4 lg:p-6">
       <Suspense>
         <Navbar />
       </Suspense>

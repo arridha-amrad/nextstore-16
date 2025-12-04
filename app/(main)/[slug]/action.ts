@@ -1,8 +1,10 @@
 "use server";
 
+import { cacheKeys } from "@/cache-keys";
 import prisma from "@/lib/prisma";
 import { authActionClient } from "@/lib/safe-action";
 import { flattenValidationErrors } from "next-safe-action";
+import { updateTag } from "next/cache";
 import z from "zod";
 
 export const addToCartAction = authActionClient
@@ -23,6 +25,8 @@ export const addToCartAction = authActionClient
       if (!cart) {
         const newCart = await prisma.cart.create({ data: { userId } });
         cartId = newCart.id;
+      } else {
+        cartId = cart.id;
       }
       await prisma.cartItem.create({
         data: {
@@ -31,8 +35,10 @@ export const addToCartAction = authActionClient
           productId,
         },
       });
+      updateTag(cacheKeys.carts);
       return "added";
     } catch (err) {
+      console.log(err);
       throw err;
     }
   });

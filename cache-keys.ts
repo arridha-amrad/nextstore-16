@@ -8,4 +8,5 @@ export const cacheKeys = {
     admin: (id: string) => `admin-product-${id}`,
   },
   productCategories: "productCategories",
+  carts: "carts",
 };
