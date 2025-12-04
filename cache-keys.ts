@@ -9,4 +9,7 @@ export const cacheKeys = {
   },
   productCategories: "productCategories",
   carts: "carts",
+  orders: {
+    pending: "pending-orders",
+  },
 };

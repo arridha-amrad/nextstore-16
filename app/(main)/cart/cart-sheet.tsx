@@ -8,8 +8,12 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
-import { WalletCardsIcon } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { CartItem } from "./query";
+import { placeOrderAction } from "./action";
+import { useRouter } from "nextjs-toploader/app";
 
 type Props = {
   items: CartItem[];
@@ -27,6 +31,48 @@ export default function CartSheet({ items }: Props) {
       pv += cv;
       return pv;
     }, 0);
+
+  const [postalCode, setPostalCode] = useState("");
+
+  const getLocation = async () => {
+    if (!navigator.geolocation) {
+      toast.error("your browser doesn't support geolocation");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+        const res = await fetch(url, {
+          headers: {
+            "User-Agent": "nextstore by devari",
+          },
+        });
+        const data = await res.json();
+        const code = data.address.postcode;
+        setPostalCode(code);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  };
+
+  const router = useRouter();
+
+  const placeOrder = async () => {
+    const result = await placeOrderAction();
+    if (result.data) {
+      toast.success("new order created", { duration: 3000 });
+      router.push("/orders");
+      return;
+    }
+    if (result.serverError) {
+      toast.error("something went wrong", { duration: 3000 });
+      return;
+    }
+  };
+
   return (
     <Sheet modal={false} open>
       <SheetContent side="bottom">
@@ -40,9 +86,11 @@ export default function CartSheet({ items }: Props) {
                 {formatToIDR(total).replace("Rp", "").trim()}
               </h2>
             </div>
-            <Button size="lg">
-              <WalletCardsIcon />
-              Pay
+            {/* <h1>{postalCode}</h1> */}
+            {/* <Button onClick={getLocation}>Get Location</Button> */}
+            <Button onClick={placeOrder} size="lg">
+              <ShoppingCart />
+              Place Order
             </Button>
           </div>
         </SheetHeader>

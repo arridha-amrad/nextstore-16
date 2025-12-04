@@ -19,6 +19,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   cart          Cart?
+  orders        Order[]
 
   @@unique([email])
   @@map("users")
@@ -87,6 +88,7 @@ model Product {
   updatedAt       DateTime         @updatedAt
   productImages   ProductImage[]
   cartItems       CartItem[]
+  orderItems      OrderItems[]
 
   @@map("products")
 }
@@ -131,4 +133,68 @@ model CartItem {
 
   @@index([cartId])
   @@map("cart_items")
+}
+
+enum OrderStatus {
+  Pending
+  Paid
+  Shipped
+  Completed
+  Canceled
+}
+
+enum PaymentStatus {
+  Unpaid
+  Paid
+  Refunded
+}
+
+model Order {
+  id               String         @id @default(uuid())
+  status           OrderStatus    @default(Pending)
+  userId           String
+  user             User           @relation(fields: [userId], references: [id])
+  subTotal         Int
+  shippingCost     Int?
+  total            Int?
+  paymentMethod    String?
+  paymentStatus    PaymentStatus  @default(Unpaid)
+  shippingProvider String?
+  shippingService  String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  orderItems       OrderItems[]
+  orderShipping    OrderShipping?
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItems {
+  id              String  @id @default(cuid())
+  order           Order   @relation(fields: [orderId], references: [id])
+  orderId         String
+  product         Product @relation(fields: [productId], references: [id])
+  productId       String
+  productName     String
+  priceAtOrder    Int
+  discountAtOrder Int
+  quantity        Int
+
+  @@map("order_items")
+}
+
+model OrderShipping {
+  id          String @id @default(cuid())
+  orderId     String @unique
+  order       Order  @relation(fields: [orderId], references: [id])
+  fullname    String
+  phoneNumber String
+  address     String
+  province    String
+  city        String
+  district    String
+  postalCode  String
+
+  @@map("order_shippings")
 }
