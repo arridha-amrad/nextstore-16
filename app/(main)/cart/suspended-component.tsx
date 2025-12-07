@@ -4,6 +4,10 @@ import { redirect } from "next/navigation";
 import CartCard from "./cart-card";
 import CartSheet from "./cart-sheet";
 
+const fetchProvinces = async () => {
+  const res = await fetch(``);
+};
+
 export default async function CartSuspendedComponent({
   page,
 }: {

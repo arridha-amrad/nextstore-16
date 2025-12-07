@@ -4,4 +4,5 @@ export const env = {
   googleRefreshToken: process.env.GOOGLE_REFRESH_TOKEN as string,
   googleUser: process.env.GOOGLE_USER as string,
   baseUrl: process.env.BASE_URL,
+  rajaOngkirApiKey: process.env.RAJA_ONGKIR_API_KEY,
 };

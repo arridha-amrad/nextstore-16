@@ -8,12 +8,13 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Truck } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { CartItem } from "./query";
 import { placeOrderAction } from "./action";
 import { useRouter } from "nextjs-toploader/app";
+import { CourierDialog } from "./courier-dialog";
 
 type Props = {
   items: CartItem[];
@@ -77,18 +78,26 @@ export default function CartSheet({ items }: Props) {
     <Sheet modal={false} open>
       <SheetContent side="bottom">
         <SheetHeader className="flex items-center justify-center">
-          <SheetTitle className="sr-only">Total</SheetTitle>
+          <SheetTitle className="sr-only">Subtotal</SheetTitle>
           <div className="flex items-center gap-8">
             <div>
-              <h1 className="font-bold">Total</h1>
+              <h1 className="font-bold">Subtotal</h1>
               <h2 className="font-bold text-2xl">
                 <span className="text-base font-light">Rp.</span>
                 {formatToIDR(total).replace("Rp", "").trim()}
               </h2>
             </div>
+            <div>
+              <CourierDialog />
+              {/* <h1 className="font-bold">Shipping Cost</h1>
+              <h2 className="font-bold text-2xl">
+                <span className="text-base font-light">Rp.</span>
+                {formatToIDR(total).replace("Rp", "").trim()}
+              </h2> */}
+            </div>
             {/* <h1>{postalCode}</h1> */}
             {/* <Button onClick={getLocation}>Get Location</Button> */}
-            <Button onClick={placeOrder} size="lg">
+            <Button disabled onClick={placeOrder} size="lg">
               <ShoppingCart />
               Place Order
             </Button>

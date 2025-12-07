@@ -99,8 +99,8 @@ importers:
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.1)
       '@tanstack/react-form':
-        specifier: ^1.27.0
-        version: 1.27.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        specifier: ^1.27.1
+        version: 1.27.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -123,8 +123,8 @@ importers:
         specifier: ^8.6.0
         version: 8.6.0(react@19.2.1)
       googleapis:
-        specifier: ^166.0.0
-        version: 166.0.0
+        specifier: ^167.0.0
+        version: 167.0.0
       lexical:
         specifier: ^0.38.2
         version: 0.38.2
@@ -202,8 +202,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.7)
       baseline-browser-mapping:
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.2
+        version: 2.9.2
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
@@ -2023,15 +2023,15 @@ packages:
     resolution: {integrity: sha512-RL1f5ZlfZMpghrCIdzl6mLOFLTuhqmPNblZgBaeKfdtk5rfbjykurv+VfYydOFXj0vxVIoA2d/zT7xfD7Ph8fw==}
     engines: {node: '>=18'}
 
-  '@tanstack/form-core@1.27.0':
-    resolution: {integrity: sha512-QFEhg9/VcrwtpbcN7Qpl8JVVfEm2UJ+dzfDFGGMYub2J9jsgrp2HmaY7LSLlnkpTJlCIDxQiWDkiOFYQtK6yzw==}
+  '@tanstack/form-core@1.27.1':
+    resolution: {integrity: sha512-hPM+0tUnZ2C2zb2TE1lar1JJ0S0cbnQHlUwFcCnVBpMV3rjtUzkoM766gUpWrlmTGCzNad0GbJ0aTxVsjT6J8g==}
 
   '@tanstack/pacer@0.15.4':
     resolution: {integrity: sha512-vGY+CWsFZeac3dELgB6UZ4c7OacwsLb8hvL2gLS6hTgy8Fl0Bm/aLokHaeDIP+q9F9HUZTnp360z9uv78eg8pg==}
     engines: {node: '>=18'}
 
-  '@tanstack/react-form@1.27.0':
-    resolution: {integrity: sha512-7MBOtvjlUwkGpvA9TIOs3YdLoyfJWZYtxuAQIdkLDZ9HLrRaRbxWQIZ2H6sRVA35sPvx6uiQMunGHOPKip5AZA==}
+  '@tanstack/react-form@1.27.1':
+    resolution: {integrity: sha512-HKP0Ew2ae9AL5vU1PkJ+oAC2p+xBtA905u0fiNLzlfn1vLkBxenfg5L6TOA+rZITHpQsSo10tqwc5Yw6qn8Mpg==}
     peerDependencies:
       '@tanstack/react-start': '*'
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -2380,8 +2380,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.9.0:
-    resolution: {integrity: sha512-Mh++g+2LPfzZToywfE1BUzvZbfOY52Nil0rn9H1CPC5DJ7fX+Vir7nToBeoiSbB1zTNeGYbELEvJESujgGrzXw==}
+  baseline-browser-mapping@2.9.2:
+    resolution: {integrity: sha512-PxSsosKQjI38iXkmb3d0Y32efqyA0uW4s41u4IVBsLlWLhCiYNpH/AfNOVWRqCQBlD8TFJTz6OUWNd4DFJCnmw==}
     hasBin: true
 
   better-auth@1.4.5:
@@ -2672,8 +2672,8 @@ packages:
   effect@3.18.4:
     resolution: {integrity: sha512-b1LXQJLe9D11wfnOKAk3PKxuqYshQ0Heez+y5pnkd3jLj1yx9QhM72zZ9uUrOQyNvrs2GZZd/3maL0ZV18YuDA==}
 
-  electron-to-chromium@1.5.264:
-    resolution: {integrity: sha512-1tEf0nLgltC3iy9wtlYDlQDc5Rg9lEKVjEmIHJ21rI9OcqkvD45K1oyNIRA4rR1z3LgJ7KeGzEBojVcV6m4qjA==}
+  electron-to-chromium@1.5.265:
+    resolution: {integrity: sha512-B7IkLR1/AE+9jR2LtVF/1/6PFhY5TlnEHnlrKmGk7PvkJibg5jr+mLXLLzq3QYl6PA1T/vLDthQPqIPAlS/PPA==}
 
   embla-carousel-react@8.6.0:
     resolution: {integrity: sha512-0/PjqU7geVmo6F734pmPqpyHqiM99olvyecY7zdweCw+6tKEXnrE90pBiBbMMU8s5tICemzpQ3hi5EpxzGW+JA==}
@@ -3044,8 +3044,8 @@ packages:
     resolution: {integrity: sha512-eCzNACUXPb1PW5l0ULTzMHaL/ltPRADoPgjBlT8jWsTbxkCp6siv+qKJ/1ldaybCthGwsYFYallF7u9AkU4L+A==}
     engines: {node: '>=18.0.0'}
 
-  googleapis@166.0.0:
-    resolution: {integrity: sha512-Xz7yG+ihVvYMwSULKIMeTp6vDX95rrSbsaR3xUmgYjwQdAkchMQ5ndFeG5QZwcBOIyvJFvG7ZLIZE7mKW2X/hw==}
+  googleapis@167.0.0:
+    resolution: {integrity: sha512-8Xqeki6K9u9jh6rGRA/OywRMXg8yXuv4ZLwSSuMBB3Ze1pErbR/iv00UmVtcrP2LcSW2Fqi+LUJ7WgFMDoxd7Q==}
     engines: {node: '>=18'}
 
   gopd@1.2.0:
@@ -3316,8 +3316,8 @@ packages:
   jwa@2.0.1:
     resolution: {integrity: sha512-hRF04fqJIP8Abbkq5NKGN0Bbr3JxlQ+qhZufXVr0DvujKy93ZCbXZMHDL4EOtodSbCWxOqR8MS1tXA5hwqCXDg==}
 
-  jws@4.0.0:
-    resolution: {integrity: sha512-KDncfTmOZoOMTFG4mBlG0qUIOlc03fmzH+ru6RgYVZhPkyiy/92Owlt/8UEN+a4TXR1FQetfIpJE8ApdvdVxTg==}
+  jws@4.0.1:
+    resolution: {integrity: sha512-EKI/M/yqPncGUUh44xz0PxSidXFr/+r0pA70+gIYhjv+et7yxM+s29Y+VGDkovRofQem0fs7Uvf4+YmAdyRduA==}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -4208,8 +4208,8 @@ packages:
   unrs-resolver@1.11.1:
     resolution: {integrity: sha512-bSjt9pjaEBnNiGgc9rUiHGKv5l4/TGzDmYw3RhnkJGtLhbnnA/5qJj7x3dNDCRx/PJxu774LlH8lCOlB4hEfKg==}
 
-  update-browserslist-db@1.2.1:
-    resolution: {integrity: sha512-R9NcHbbZ45RoWfTdhn1J9SS7zxNvlddv4YRrHTUaFdtjbmfncfedB45EC9IaqJQ97iAR1GZgOfyRQO+ExIF6EQ==}
+  update-browserslist-db@1.2.2:
+    resolution: {integrity: sha512-E85pfNzMQ9jpKkA7+TJAi4TJN+tBCuWh5rUcS/sv6cFi+1q9LYDwDI5dpUL0u/73EElyQ8d3TEaeW4sPedBqYA==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
@@ -6477,7 +6477,7 @@ snapshots:
 
   '@tanstack/devtools-event-client@0.3.5': {}
 
-  '@tanstack/form-core@1.27.0':
+  '@tanstack/form-core@1.27.1':
     dependencies:
       '@tanstack/devtools-event-client': 0.3.5
       '@tanstack/pacer': 0.15.4
@@ -6488,9 +6488,9 @@ snapshots:
       '@tanstack/devtools-event-client': 0.3.5
       '@tanstack/store': 0.7.7
 
-  '@tanstack/react-form@1.27.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+  '@tanstack/react-form@1.27.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
-      '@tanstack/form-core': 1.27.0
+      '@tanstack/form-core': 1.27.1
       '@tanstack/react-store': 0.8.0(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
     transitivePeerDependencies:
@@ -6846,7 +6846,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.9.0: {}
+  baseline-browser-mapping@2.9.2: {}
 
   better-auth@1.4.5(next@16.0.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
     dependencies:
@@ -6896,11 +6896,11 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.9.0
+      baseline-browser-mapping: 2.9.2
       caniuse-lite: 1.0.30001759
-      electron-to-chromium: 1.5.264
+      electron-to-chromium: 1.5.265
       node-releases: 2.0.27
-      update-browserslist-db: 1.2.1(browserslist@4.28.1)
+      update-browserslist-db: 1.2.2(browserslist@4.28.1)
 
   buffer-equal-constant-time@1.0.1: {}
 
@@ -7125,7 +7125,7 @@ snapshots:
       '@standard-schema/spec': 1.0.0
       fast-check: 3.23.2
 
-  electron-to-chromium@1.5.264: {}
+  electron-to-chromium@1.5.265: {}
 
   embla-carousel-react@8.6.0(react@19.2.1):
     dependencies:
@@ -7683,7 +7683,7 @@ snapshots:
       gcp-metadata: 8.1.2
       google-logging-utils: 1.1.3
       gtoken: 8.0.0
-      jws: 4.0.0
+      jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7699,7 +7699,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  googleapis@166.0.0:
+  googleapis@167.0.0:
     dependencies:
       google-auth-library: 10.5.0
       googleapis-common: 8.0.1
@@ -7717,7 +7717,7 @@ snapshots:
   gtoken@8.0.0:
     dependencies:
       gaxios: 7.1.3
-      jws: 4.0.0
+      jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7965,7 +7965,7 @@ snapshots:
       ecdsa-sig-formatter: 1.0.11
       safe-buffer: 5.2.1
 
-  jws@4.0.0:
+  jws@4.0.1:
     dependencies:
       jwa: 2.0.1
       safe-buffer: 5.2.1
@@ -8908,7 +8908,7 @@ snapshots:
       '@unrs/resolver-binding-win32-ia32-msvc': 1.11.1
       '@unrs/resolver-binding-win32-x64-msvc': 1.11.1
 
-  update-browserslist-db@1.2.1(browserslist@4.28.1):
+  update-browserslist-db@1.2.2(browserslist@4.28.1):
     dependencies:
       browserslist: 4.28.1
       escalade: 3.2.0

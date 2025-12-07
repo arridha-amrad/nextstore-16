@@ -18,7 +18,7 @@ type Props = {
 export default function NavCategoriesMenu({ categories }: Props) {
   const isMobile = useIsMobile();
   return (
-    <NavigationMenu viewport={isMobile} className="z-9999">
+    <NavigationMenu viewport={isMobile} className="">
       <NavigationMenuList className="flex-wrap">
         <NavigationMenuItem>
           <NavigationMenuTrigger>Categories</NavigationMenuTrigger>

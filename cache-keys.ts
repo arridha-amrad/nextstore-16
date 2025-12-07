@@ -6,6 +6,7 @@ export const cacheKeys = {
   product: {
     user: (id: string) => `user-product-${id}`,
     admin: (id: string) => `admin-product-${id}`,
+    slug: (slug: string) => `product-by-${slug}`,
   },
   productCategories: "productCategories",
   carts: "carts",
