@@ -88,7 +88,7 @@ export default function CartSheet({ items }: Props) {
               </h2>
             </div>
             <div>
-              <CourierDialog />
+              <CourierDialog weight={1000} />
               {/* <h1 className="font-bold">Shipping Cost</h1>
               <h2 className="font-bold text-2xl">
                 <span className="text-base font-light">Rp.</span>

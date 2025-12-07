@@ -28,7 +28,7 @@ export default async function CartSuspendedComponent({
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="flex gap-4">
       {cart?.cartItems.map((item) => (
         <CartCard key={item.id} item={item} />
       ))}
