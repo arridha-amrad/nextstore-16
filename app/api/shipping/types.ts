@@ -11,3 +11,13 @@ export type Shipping = {
   name: string; // Lion Parcel
   service: string; // REGPACK
 };
+
+export type Address = {
+  province: string;
+  city: string;
+  district: string;
+  address: string;
+  phoneNumber: string;
+  fullname: string;
+  postalCode: string;
+};

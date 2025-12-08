@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth";
 import { fetchOrders } from "./query";
 import { redirect } from "next/navigation";
+import OrderCard from "./order-card";
 
 export default async function OrdersSuspendedComponent() {
   const session = await getServerSession();
@@ -15,9 +16,10 @@ export default async function OrdersSuspendedComponent() {
   }
 
   return (
-    <div>
-      <h1>suspended</h1>
-      {JSON.stringify(orders)}
+    <div className="flex gap-x-4 flex-wrap">
+      {orders.map((order) => (
+        <OrderCard key={order.id} order={order} />
+      ))}
     </div>
   );
 }

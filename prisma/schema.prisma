@@ -79,6 +79,7 @@ model Product {
   categoryId      Int?
   category        ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   slug            String           @unique
+  weight          Int              @default(500)
   price           Float            @db.DoublePrecision
   stock           Int
   discount        Int              @default(0) @db.Integer

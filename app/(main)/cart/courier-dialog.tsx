@@ -1,47 +1,54 @@
 "use client";
 
+import { Address, IdWithName, Shipping } from "@/app/api/shipping/types";
 import { InputField, TextareaField } from "@/components/input-field";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
-  DialogOverlay,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Truck } from "lucide-react";
-import SelectOptions from "./select-options";
-import { FormEvent, useEffect, useId, useState } from "react";
-import { env } from "@/lib/env";
-import { IdWithName, Shipping } from "@/app/api/shipping/types";
-import toast from "react-hot-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { env } from "@/lib/env";
 import { formatToIDR } from "@/lib/utils";
+import { Truck } from "lucide-react";
+import { FormEvent, useEffect, useId, useState } from "react";
+import toast from "react-hot-toast";
+import SelectOptions from "./select-options";
+import { useSession } from "@/lib/auth-client";
 
 type Props = {
   weight: number;
+  setAddressCallback: (v: Address) => void;
+  setShippingCallback: (v: Shipping) => void;
 };
 
-export function CourierDialog({ weight }: Props) {
+export function CourierDialog({ weight, setAddressCallback, setShippingCallback }: Props) {
+  const { data } = useSession();
   const [provinces, setProvinces] = useState<IdWithName[]>([]);
-  const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(
-    null
-  );
+  const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
   const [cities, setCities] = useState<IdWithName[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<string | null>(null);
   const [districts, setDistricts] = useState<IdWithName[]>([]);
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(
-    null
-  );
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(null);
   const [address, setAddress] = useState("");
   const [availableCouriers, setAvailableCouriers] = useState<Shipping[]>([]);
+  const [isOpen, setOpen] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [fullname, setFullname] = useState(data?.user.name ?? "");
+  const [postalCode, setPostalCode] = useState("");
+
+  useEffect(() => {
+    if (data?.user) {
+      setFullname(data.user.name);
+    }
+  }, [data?.user]);
 
   useEffect(() => {
     fetch(`${env.nextPublicBaseUrl}/api/shipping?fetchType=provinces`)
@@ -53,9 +60,7 @@ export function CourierDialog({ weight }: Props) {
 
   useEffect(() => {
     if (selectedProvinceId) {
-      fetch(
-        `${env.nextPublicBaseUrl}/api/shipping?fetchType=cities&provinceId=${selectedProvinceId}`
-      )
+      fetch(`${env.nextPublicBaseUrl}/api/shipping?fetchType=cities&provinceId=${selectedProvinceId}`)
         .then((res) => res.json())
         .then((data) => {
           setCities(data);
@@ -65,9 +70,7 @@ export function CourierDialog({ weight }: Props) {
 
   useEffect(() => {
     if (selectedCityId) {
-      fetch(
-        `${env.nextPublicBaseUrl}/api/shipping?fetchType=districts&cityId=${selectedCityId}`
-      )
+      fetch(`${env.nextPublicBaseUrl}/api/shipping?fetchType=districts&cityId=${selectedCityId}`)
         .then((res) => res.json())
         .then((data) => {
           setDistricts(data);
@@ -77,24 +80,19 @@ export function CourierDialog({ weight }: Props) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (
-      !selectedProvinceId ||
-      !selectedCityId ||
-      !selectedDistrictId ||
-      address === ""
-    ) {
+    if (!selectedProvinceId || !selectedCityId || !selectedDistrictId || address === "") {
       toast.error("Please complete the form");
       return;
     }
-    localStorage.setItem(
-      "address",
-      JSON.stringify({
-        province: provinces.find((p) => p.id === parseInt(selectedProvinceId)),
-        city: cities.find((p) => p.id === parseInt(selectedCityId)),
-        district: districts.find((p) => p.id === parseInt(selectedDistrictId)),
-        address,
-      })
-    );
+    setAddressCallback({
+      province: provinces.find((p) => p.id === parseInt(selectedProvinceId))?.name ?? "",
+      city: cities.find((p) => p.id === parseInt(selectedCityId))?.name ?? "",
+      district: districts.find((p) => p.id === parseInt(selectedDistrictId))?.name ?? "",
+      address,
+      phoneNumber,
+      fullname,
+      postalCode,
+    });
     const result = await fetch(`${env.nextPublicBaseUrl}/api/shipping`, {
       method: "POST",
       body: JSON.stringify({
@@ -104,8 +102,6 @@ export function CourierDialog({ weight }: Props) {
       }),
     });
     const data = (await result.json()) as Shipping[];
-    console.log(data);
-
     setAvailableCouriers(data);
   };
 
@@ -116,7 +112,7 @@ export function CourierDialog({ weight }: Props) {
   }, [selectedDistrictId]);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Truck />
@@ -124,13 +120,19 @@ export function CourierDialog({ weight }: Props) {
         </Button>
       </DialogTrigger>
       <DialogOverlay className="backdrop-blur" />
-      <DialogContent className="sm:max-w-md relative">
-        <DialogTitle>Choose Courier</DialogTitle>
-        <DialogDescription>
-          Your order will be sent from Riau, Pekanbaru, Bukit Raya, 4247
-        </DialogDescription>
+      <DialogContent aria-describedby="sadasda" className="sm:max-w-md relative">
+        <DialogHeader>
+          <DialogTitle>Choose Courier</DialogTitle>
+          <DialogDescription aria-describedby="Your order will be sent from Riau, Pekanbaru, Bukit Raya, 4247">
+            Your order will be sent from Riau, Pekanbaru, Bukit Raya, 4247
+          </DialogDescription>
+        </DialogHeader>
         {availableCouriers.length > 0 ? (
-          <CourierOptions options={availableCouriers} />
+          <CourierOptions
+            setShippingCallback={setShippingCallback}
+            close={() => setOpen(false)}
+            options={availableCouriers}
+          />
         ) : (
           <form onSubmit={handleSubmit}>
             <FieldGroup className="relative">
@@ -151,6 +153,26 @@ export function CourierDialog({ weight }: Props) {
                 onValueChange={setSelectedDistrictId}
                 label="District"
                 options={districts}
+              />
+              <div className="flex items-start gap-x-4">
+                <InputField
+                  label="Name"
+                  placeholder="John doe"
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+                <InputField
+                  label="Phone number"
+                  placeholder="081211223344"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+              <InputField
+                label="Postal Code"
+                placeholder="28288"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
               />
               <TextareaField
                 value={address}
@@ -173,20 +195,25 @@ export function CourierDialog({ weight }: Props) {
 
 type OptionsProps = {
   options: Shipping[];
+  close: VoidFunction;
+  setShippingCallback: (v: Shipping) => void;
 };
-const CourierOptions = ({ options }: OptionsProps) => {
+const CourierOptions = ({ options, close, setShippingCallback }: OptionsProps) => {
   const [value, setValue] = useState<string | null>(null);
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mt-6">
       <RadioGroup value={value} onValueChange={setValue} className="space-y-2">
         {options.map((o, i) => (
           <Option key={i} shipping={o} />
         ))}
       </RadioGroup>
       <Button
-        className="w-full"
+        className="w-full mt-6"
         onClick={() => {
-          console.log(value);
+          if (value) {
+            setShippingCallback(JSON.parse(value));
+          }
+          close();
         }}
       >
         Pick
@@ -200,16 +227,13 @@ const Option = ({ shipping }: { shipping: Shipping }) => {
   return (
     <div className="flex items-start gap-x-4">
       <RadioGroupItem value={JSON.stringify(shipping)} id={id} />
-      <div>
+      <div className="space-y-1">
         <Label htmlFor={id}>
           {shipping.name} ({shipping.service})
         </Label>
-        <p className="text-sm font-light text-foreground/60">
-          {shipping.description}
-        </p>
+        <p className="text-sm font-light text-foreground/60">{shipping.description}</p>
         <p className="text-sm">
-          {formatToIDR(shipping.cost)} &middot;{" "}
-          <span className="italic">{shipping.etd}</span>
+          {formatToIDR(shipping.cost)} &middot; <span className="italic">{shipping.etd}</span>
         </p>
       </div>
     </div>

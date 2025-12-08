@@ -113,8 +113,29 @@ export const deleteCartItemAction = authActionClient
     }
   });
 
-export const placeOrderAction = authActionClient.action(
-  async ({ ctx: { userId } }) => {
+export const placeOrderAction = authActionClient
+  .inputSchema(
+    z.object({
+      shipping: z.object({
+        code: z.string(),
+        cost: z.number(),
+        description: z.string().optional(),
+        etd: z.string().optional(),
+        name: z.string().optional(),
+        service: z.string().optional(),
+      }),
+      address: z.object({
+        province: z.string(),
+        city: z.string(),
+        district: z.string(),
+        phoneNumber: z.string(),
+        fullname: z.string(),
+        address: z.string(),
+        postalCode: z.string(),
+      }),
+    })
+  )
+  .action(async ({ ctx: { userId }, parsedInput: { address, shipping } }) => {
     try {
       const cart = await prisma.cart.findUnique({
         where: {
@@ -141,11 +162,7 @@ export const placeOrderAction = authActionClient.action(
 
       // init order
       const subTotal = items
-        .map(
-          (item) =>
-            item.quantity *
-            getAfterDiscountPrice(item.product.price, item.product.discount)
-        )
+        .map((item) => item.quantity * getAfterDiscountPrice(item.product.price, item.product.discount))
         .reduce((cv, pv) => {
           pv += cv;
           return pv;
@@ -154,6 +171,21 @@ export const placeOrderAction = authActionClient.action(
         data: {
           subTotal,
           userId,
+          total: subTotal + shipping.cost,
+          shippingCost: shipping.cost,
+          shippingProvider: shipping.name,
+          shippingService: shipping.service,
+          orderShipping: {
+            create: {
+              address: address.address,
+              city: address.city,
+              district: address.district,
+              fullname: address.fullname,
+              phoneNumber: address.phoneNumber,
+              province: address.province,
+              postalCode: address.postalCode,
+            },
+          },
           orderItems: {
             create: items.map((item) => ({
               productId: item.productId,
@@ -180,5 +212,4 @@ export const placeOrderAction = authActionClient.action(
       console.log(err);
       throw err;
     }
-  }
-);
+  });
