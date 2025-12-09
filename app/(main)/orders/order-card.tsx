@@ -4,11 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { env } from "@/lib/env";
-import { formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
+import { cn, formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
 import { Ship, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Order } from "./query";
 import { useRouter } from "nextjs-toploader/app";
+import { completeOrderAction } from "./action";
+import toast from "react-hot-toast";
+import { ReviewDialog } from "./review-dialog";
 
 type Props = {
   order: Order;
@@ -54,30 +57,46 @@ export default function OrderCard({ order }: Props) {
       <CardContent className="space-y-4">
         <CardTitle className="flex items-center gap-2">
           <ShoppingBag />
-          <Badge variant={"secondary"}>{order.status}</Badge>
+          <Badge
+            variant={"secondary"}
+            className={cn(order.status === "Completed" ? "text-primary" : "")}
+          >
+            {order.status}
+          </Badge>
           <p>{order.id}</p>
         </CardTitle>
         <div>
           {order.orderItems.map((item) => (
             <div className="flex items-center gap-2" key={item.id}>
-              <Link href={`${env.nextPublicBaseUrl}/${item.product.slug}`} className="font-bold">
+              <Link
+                href={`${env.nextPublicBaseUrl}/${item.product.slug}`}
+                className="font-bold"
+              >
                 {item.productName}
               </Link>
               <p className="font-light text-sm text-foreground/70">
-                {item.quantity} x {formatToIDR(getAfterDiscountPrice(item.priceAtOrder, item.discountAtOrder))}
+                {item.quantity} x{" "}
+                {formatToIDR(
+                  getAfterDiscountPrice(item.priceAtOrder, item.discountAtOrder)
+                )}
               </p>
             </div>
           ))}
           <p>
-            <span className="font-bold">Courier {order.shippingProvider}&nbsp;</span>
-            <span className="font-light text-sm text-foreground/70">1 x {order.shippingCost}</span>
+            <span className="font-bold">
+              Courier {order.shippingProvider}&nbsp;
+            </span>
+            <span className="font-light text-sm text-foreground/70">
+              1 x {order.shippingCost}
+            </span>
           </p>
         </div>
         <div className="flex items-center">
           <Ship />
           &nbsp;
           <p className="text-sm">
-            to {order.orderShipping?.province}, {order.orderShipping?.city}, {order.orderShipping?.district}
+            to {order.orderShipping?.province}, {order.orderShipping?.city},{" "}
+            {order.orderShipping?.district}
           </p>
         </div>
       </CardContent>
@@ -93,9 +112,25 @@ export default function OrderCard({ order }: Props) {
                 processing...
               </Badge>
             )}
-            <Button disabled={order.status === "Paid"} onClick={async () => await pay(order.id)}>
-              {order.status === "Paid" ? "Paid" : "Pay"}
-            </Button>
+            {order.status === "Shipped" && (
+              <Button
+                onClick={async () => {
+                  const result = await completeOrderAction({
+                    orderId: order.id,
+                  });
+                  if (result.data) {
+                    toast.success(result.data);
+                    return;
+                  }
+                }}
+              >
+                Complete
+              </Button>
+            )}
+            {order.status === "Completed" && <ReviewDialog />}
+            {order.status === "Pending" && (
+              <Button onClick={async () => await pay(order.id)}>Pay</Button>
+            )}
           </div>
         </div>
       </CardFooter>

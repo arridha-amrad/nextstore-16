@@ -12,5 +12,6 @@ export const cacheKeys = {
   carts: "carts",
   orders: {
     pending: "pending-orders",
+    admin: "admin-orders",
   },
 };

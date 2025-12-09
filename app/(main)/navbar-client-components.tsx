@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "nextjs-toploader/app";
-import { signOut } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import { getServerSession } from "@/lib/auth";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -62,6 +62,7 @@ export function NavbarUserDropDown({
     await signOut();
     router.refresh();
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -74,12 +75,17 @@ export function NavbarUserDropDown({
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {session?.user.role === "admin" && (
+          <DropdownMenuItem onClick={() => router.push("/admin")}>
+            Admin
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem onClick={() => router.push("/orders")}>
+          Orders
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={logout} variant="destructive">
           Logout
         </DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
