@@ -27,3 +27,7 @@ export const slugify = (input: string): string => {
     .replace(/^-+|-+$/g, "")
     .replace(/-{2,}/g, "-");
 };
+
+export function toBase64(str: string): string {
+  return typeof window === "undefined" ? Buffer.from(str).toString("base64") : window.btoa(str);
+}

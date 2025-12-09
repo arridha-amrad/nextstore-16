@@ -151,17 +151,17 @@ enum PaymentStatus {
 }
 
 model Order {
-  id               String         @id @default(uuid())
+  id               String         @id @default(nanoid(15))
   status           OrderStatus    @default(Pending)
   userId           String
   user             User           @relation(fields: [userId], references: [id])
   subTotal         Int
-  shippingCost     Int?
-  total            Int?
+  shippingCost     Int
+  total            Int
   paymentMethod    String?
   paymentStatus    PaymentStatus  @default(Unpaid)
-  shippingProvider String?
-  shippingService  String?
+  shippingProvider String
+  shippingService  String
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   orderItems       OrderItems[]

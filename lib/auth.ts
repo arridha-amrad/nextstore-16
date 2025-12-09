@@ -48,6 +48,7 @@ export const auth = betterAuth({
       });
     },
   },
+  trustedOrigins: [env.nextPublicBaseUrl!, "https://katy-illegible-min.ngrok-free.app"],
   socialProviders: {
     google: {
       prompt: "select_account",

@@ -12,7 +12,6 @@ export const fetchOrders = async ({ userId }: Params) => {
   const result = await prisma.order.findMany({
     where: {
       userId,
-      status: "Pending",
     },
     include: {
       orderItems: {

@@ -1,7 +1,7 @@
 import { getServerSession } from "@/lib/auth";
-import { fetchOrders } from "./query";
 import { redirect } from "next/navigation";
-import OrderCard from "./order-card";
+import OrderList from "./order-list";
+import { fetchOrders } from "./query";
 
 export default async function OrdersSuspendedComponent() {
   const session = await getServerSession();
@@ -15,11 +15,5 @@ export default async function OrdersSuspendedComponent() {
     return <p>Record not found</p>;
   }
 
-  return (
-    <div className="flex gap-x-4 flex-wrap">
-      {orders.map((order) => (
-        <OrderCard key={order.id} order={order} />
-      ))}
-    </div>
-  );
+  return <OrderList orders={orders} />;
 }

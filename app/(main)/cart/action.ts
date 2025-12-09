@@ -173,8 +173,8 @@ export const placeOrderAction = authActionClient
           userId,
           total: subTotal + shipping.cost,
           shippingCost: shipping.cost,
-          shippingProvider: shipping.name,
-          shippingService: shipping.service,
+          shippingProvider: shipping.name ?? "",
+          shippingService: shipping.service ?? "",
           orderShipping: {
             create: {
               address: address.address,

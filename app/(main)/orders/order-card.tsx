@@ -8,12 +8,47 @@ import { formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
 import { Ship, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Order } from "./query";
+import { useRouter } from "nextjs-toploader/app";
 
 type Props = {
   order: Order;
 };
 
+const getMidtransToken = async (orderId: string) => {
+  const response = await fetch(`${env.nextPublicBaseUrl}/api/midtrans`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ order_id: orderId }),
+  });
+  const data = await response.json();
+  return data;
+};
+
 export default function OrderCard({ order }: Props) {
+  const router = useRouter();
+  const pay = async (orderId: string) => {
+    try {
+      window.snap.show();
+      const token = await getMidtransToken(orderId);
+      window.snap.pay(token.token, {
+        onSuccess: function (result: any) {
+          // router.push("/payment/success");
+          router.refresh();
+        },
+        onPending: function (result: any) {
+          console.log("Pending", result);
+        },
+        onError: function (result: any) {
+          console.log(result);
+          router.push("/payment/error");
+        },
+      });
+    } catch (error) {
+      window.snap.hide();
+    }
+  };
   return (
     <Card className="w-max">
       <CardContent className="space-y-4">
@@ -52,7 +87,16 @@ export default function OrderCard({ order }: Props) {
             <h1 className="">Total Shopping</h1>
             <p className="text-sm font-bold">{formatToIDR(order.total!)}</p>
           </div>
-          <Button>Pay</Button>
+          <div className="flex items-center gap-2">
+            {order.status === "Paid" && (
+              <Badge className="animate-pulse" variant={"secondary"}>
+                processing...
+              </Badge>
+            )}
+            <Button disabled={order.status === "Paid"} onClick={async () => await pay(order.id)}>
+              {order.status === "Paid" ? "Paid" : "Pay"}
+            </Button>
+          </div>
         </div>
       </CardFooter>
     </Card>
