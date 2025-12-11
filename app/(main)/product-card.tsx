@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { fetchProducts, Product } from "./query";
 import Image from "next/image";
-import { formatToIDR } from "@/lib/utils";
+import { formatToIDR, rgbaDataURL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "nextjs-toploader/app";
 
@@ -23,6 +23,8 @@ export default function ProductCard({ product }: Props) {
             className="object-cover aspect-square object-center"
             alt={product.name}
             src={product.productImages[0].url}
+            placeholder="blur"
+            blurDataURL={rgbaDataURL(0, 0, 0, 0)}
             height={400}
             width={400}
           />

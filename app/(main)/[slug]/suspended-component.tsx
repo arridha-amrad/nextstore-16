@@ -1,4 +1,4 @@
-import Product from "./product";
+import Product from "./product-detail";
 import { fetchProductBySlug } from "./query";
 
 export default async function SuspendedComponent({

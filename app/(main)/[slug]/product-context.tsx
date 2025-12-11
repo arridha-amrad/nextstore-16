@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { useSession } from "@/lib/auth-client";
-import { formatToIDR } from "@/lib/utils";
+import { formatToIDR, rgbaDataURL } from "@/lib/utils";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
@@ -27,14 +27,14 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 
-const ProductDetailContext = createContext<{
+const Context = createContext<{
   product: TProductDetail;
   counter: number;
   setCounter: Dispatch<SetStateAction<number>>;
 } | null>(null);
 
 const useProductDetailContext = () => {
-  const ctx = useContext(ProductDetailContext);
+  const ctx = useContext(Context);
   if (!ctx) {
     throw new Error(
       "useProductDetailContext must be used within a ProductDetailProvider"
@@ -43,19 +43,19 @@ const useProductDetailContext = () => {
   return ctx;
 };
 
-const ProductDetail = ({
+const ProductDetailContext = ({
   children,
   product,
 }: ChildrenProps & { product: TProductDetail }) => {
   const [counter, setCounter] = useState(0);
   return (
-    <ProductDetailContext.Provider value={{ product, counter, setCounter }}>
+    <Context.Provider value={{ product, counter, setCounter }}>
       <div className="flex items-start gap-6">{children}</div>
-    </ProductDetailContext.Provider>
+    </Context.Provider>
   );
 };
 
-ProductDetail.Carousel = ({ images }: { images: string[] }) => {
+ProductDetailContext.Carousel = ({ images }: { images: string[] }) => {
   return (
     <Carousel className="w-full">
       <CarouselContent>
@@ -67,6 +67,8 @@ ProductDetail.Carousel = ({ images }: { images: string[] }) => {
               alt={v}
               width={500}
               height={500}
+              placeholder="blur"
+              blurDataURL={rgbaDataURL(0, 0, 0, 0)}
             />
           </CarouselItem>
         ))}
@@ -93,7 +95,7 @@ function Description() {
   );
 }
 
-ProductDetail.Price = function Price() {
+ProductDetailContext.Price = function Price() {
   const { product } = useProductDetailContext();
   return (
     <div className="flex items-center gap-4 mt-4">
@@ -112,7 +114,7 @@ ProductDetail.Price = function Price() {
   );
 };
 
-ProductDetail.Counter = function Counter() {
+ProductDetailContext.Counter = function Counter() {
   const { setCounter, counter } = useProductDetailContext();
   return (
     <ButtonGroup>
@@ -141,7 +143,7 @@ ProductDetail.Counter = function Counter() {
   );
 };
 
-ProductDetail.AddToCart = function AddToCart() {
+ProductDetailContext.AddToCart = function AddToCart() {
   const router = useRouter();
   const { data } = useSession();
   const pathname = usePathname();
@@ -180,5 +182,16 @@ ProductDetail.AddToCart = function AddToCart() {
   );
 };
 
-ProductDetail.Description = Description;
-export default ProductDetail;
+ProductDetailContext.Description = () => {
+  const { product } = useProductDetailContext();
+  return (
+    product.descriptionHtml && (
+      <div
+        className="mt-4"
+        dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+      />
+    )
+  );
+};
+
+export default ProductDetailContext;
