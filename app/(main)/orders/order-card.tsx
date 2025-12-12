@@ -127,7 +127,7 @@ export default function OrderCard({ order }: Props) {
                 Complete
               </Button>
             )}
-            {order.status === "Completed" && <ReviewDialog />}
+            {order.status === "Completed" && <ReviewDialog order={order} />}
             {order.status === "Pending" && (
               <Button onClick={async () => await pay(order.id)}>Pay</Button>
             )}

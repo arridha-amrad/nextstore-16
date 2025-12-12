@@ -16,7 +16,18 @@ export const fetchOrders = async ({ userId }: Params) => {
     include: {
       orderItems: {
         include: {
-          product: true,
+          product: {
+            include: {
+              reviews: {
+                where: {
+                  userId,
+                },
+              },
+              productImages: {
+                take: 1,
+              },
+            },
+          },
         },
       },
       orderShipping: true,

@@ -8,18 +8,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String          @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean         @default(false)
   image         String?
-  role          String    @default("user")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  role          String          @default("user")
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   sessions      Session[]
   accounts      Account[]
   cart          Cart?
   orders        Order[]
+  reviews       ProductReview[]
 
   @@unique([email])
   @@map("users")
@@ -90,6 +91,7 @@ model Product {
   productImages   ProductImage[]
   cartItems       CartItem[]
   orderItems      OrderItems[]
+  reviews         ProductReview[]
 
   @@map("products")
 }
@@ -166,6 +168,7 @@ model Order {
   updatedAt        DateTime       @updatedAt
   orderItems       OrderItems[]
   orderShipping    OrderShipping?
+  productReview    ProductReview?
 
   @@index([userId])
   @@map("orders")
@@ -198,4 +201,21 @@ model OrderShipping {
   postalCode  String
 
   @@map("order_shippings")
+}
+
+model ProductReview {
+  id        String   @id @default(cuid())
+  rating    Float    @db.Real
+  comment   String?  @db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String   @unique
+
+  @@index([productId, userId])
+  @@map("product_reviews")
 }
