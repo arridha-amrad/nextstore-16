@@ -6,10 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -17,14 +15,14 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { formatToIDR, getAfterDiscountPrice, rgbaDataURL } from "@/lib/utils";
+import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Order } from "./query";
-import { useAction } from "next-safe-action/hooks";
-import { reviewProductAction } from "./action";
 import toast from "react-hot-toast";
-import { Spinner } from "@/components/ui/spinner";
+import { reviewProductAction } from "./action";
+import { Order } from "./query";
 
 export function ReviewDialog({ order }: { order: Order }) {
   const [value, setValue] = useState<number>(0);
@@ -136,7 +134,11 @@ export function ReviewDialog({ order }: { order: Order }) {
             </FieldGroup>
           ))}
           <div className="flex justify-end gap-2 mt-2">
-            <Button onClick={() => setOpen(false)} variant="outline">
+            <Button
+              type="button"
+              onClick={() => setOpen(false)}
+              variant="outline"
+            >
               Cancel
             </Button>
             <Button disabled={isPending} type="submit">
