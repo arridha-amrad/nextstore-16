@@ -1,7 +1,24 @@
 import prisma from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
-import { hash } from "@node-rs/argon2";
+import { hashPassword } from "better-auth/crypto";
+
+async function updateUsersPassword() {
+  await prisma.account.updateMany({
+    data: {
+      password: await hashPassword("Nextstore123"),
+    },
+  });
+}
+updateUsersPassword()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
 
 async function createUsers() {
   const result = await prisma.user.createManyAndReturn({
@@ -15,7 +32,7 @@ async function createUsers() {
       role: "user",
     })),
   });
-  const hashedPassword = await hash("Nextstore123");
+  const hashedPassword = await hashPassword("Nextstore123");
   const ids = result.map((r) => r.id);
   await prisma.account.createMany({
     skipDuplicates: true,
@@ -72,12 +89,12 @@ async function main() {
   await createProducts();
 }
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+// main()
+//   .then(async () => {
+//     await prisma.$disconnect();
+//   })
+//   .catch(async (e) => {
+//     console.error(e);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   });

@@ -9,7 +9,10 @@ export const POST = async (request: NextRequest) => {
   const orderId = body.order_id;
 
   if (!orderId || typeof orderId !== "string") {
-    return NextResponse.json({ error: "Order ID is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Order ID is required" },
+      { status: 400 }
+    );
   }
 
   const order = await prisma.order.findUnique({
@@ -54,7 +57,7 @@ export const POST = async (request: NextRequest) => {
 
   let parameter = {
     transaction_details: {
-      order_id: order.id + "__" + order.createdAt.getTime(),
+      order_id: `${order.id}__${order.createdAt.getTime()}`,
       gross_amount: order.total,
     },
     item_details: order.orderItems
