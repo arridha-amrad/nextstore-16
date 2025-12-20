@@ -1,10 +1,10 @@
 "use client";
 
 import { cn, rgbaDataURL } from "@/lib/utils";
-import ProductDetailContext from "./product-context";
-import { TProductDetail } from "./query";
+import ProductDetailContext from "./ProductDetailContext";
 import Image from "next/image";
 import { useState } from "react";
+import { TProductDetail } from "@/features/product/products-queries";
 
 export default function ProductDetail({
   product,

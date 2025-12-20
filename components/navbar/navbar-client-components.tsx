@@ -2,19 +2,14 @@
 
 import {
   InputGroup,
-  InputGroupInput,
   InputGroupAddon,
+  InputGroupInput,
 } from "@/components/ui/input-group";
-import {
-  ChevronDown,
-  LogOutIcon,
-  Search,
-  ShoppingCart,
-  User,
-} from "lucide-react";
+import { ChevronDown, Search, ShoppingCart, User } from "lucide-react";
 import Form from "next/form";
 import { useRef } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,12 +18,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "nextjs-toploader/app";
-import { signOut, useSession } from "@/lib/auth-client";
-import { getServerSession } from "@/lib/auth";
-import { usePathname } from "next/navigation";
+import { AuthUser } from "@/lib/auth";
+import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 
 export function NavbarSearch() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -52,15 +46,12 @@ export function NavbarSearch() {
   );
 }
 
-export function NavbarUserDropDown({
-  session,
-}: {
-  session: Awaited<ReturnType<typeof getServerSession>>;
-}) {
+export function NavbarUserDropDown({ user }: { user: AuthUser }) {
   const router = useRouter();
+
   const logout = async () => {
     await signOut();
-    router.refresh();
+    router.replace("/auth/signin");
   };
 
   return (
@@ -68,14 +59,14 @@ export function NavbarUserDropDown({
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <User />
-          {session?.user.name}
+          {user.name}
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {session?.user.role === "admin" && (
+        {user.role === "admin" && (
           <DropdownMenuItem onClick={() => router.push("/admin")}>
             Admin
           </DropdownMenuItem>

@@ -1,24 +1,25 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { fetchProducts, Product } from "./query";
 import Image from "next/image";
 import { formatToIDR, rgbaDataURL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "nextjs-toploader/app";
+import { Product } from "@/features/product/products-queries";
 
 type Props = {
-  product: Product[number];
+  product: Product;
 };
+
 export default function ProductCard({ product }: Props) {
   const router = useRouter();
   return (
     <Card
-      className="pt-0 overflow-hidden"
+      className="pt-0 overflow-hidden select-none cursor-pointer"
       onClick={() => router.push(`/${product.slug}`)}
     >
       <CardContent className="space-y-2 p-0">
-        <div className="w-full border aspect-square">
+        <div className="w-full border-b aspect-square">
           <Image
             className="object-cover aspect-square object-center"
             alt={product.name}

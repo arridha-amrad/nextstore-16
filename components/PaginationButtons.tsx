@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
 
-export function PaginationProducts({
+export default function PaginationButtons({
   itemsPerPage,
   totalRecords,
 }: {

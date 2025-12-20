@@ -9,5 +9,6 @@ export const fetchCategories = async () => {
   const categories = prisma.productCategory.findMany({
     orderBy: { title: "asc" },
   });
+
   return categories;
 };

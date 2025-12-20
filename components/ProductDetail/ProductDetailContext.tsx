@@ -15,8 +15,6 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import { addToCartAction } from "./action";
-import { TProductDetail } from "./query";
 import { ChildrenProps } from "@/types";
 import {
   Carousel,
@@ -26,6 +24,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import { TProductDetail } from "@/features/product/products-queries";
+import { addToCartAction } from "@/features/product/product-actions";
 
 const Context = createContext<{
   product: TProductDetail;

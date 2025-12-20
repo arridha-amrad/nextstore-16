@@ -4,7 +4,11 @@ import { redirect } from "next/navigation";
 import CartCard from "./cart-card";
 import CartSheet from "./cart-sheet";
 
-export default async function CartSuspendedComponent({ page }: { page: Promise<number> }) {
+export default async function CartSuspendedComponent({
+  page,
+}: {
+  page: Promise<number>;
+}) {
   const session = await getServerSession();
 
   if (!session) {
@@ -20,7 +24,7 @@ export default async function CartSuspendedComponent({ page }: { page: Promise<n
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 flex-wrap">
       {cart?.cartItems.map((item) => (
         <CartCard key={item.id} item={item} />
       ))}

@@ -63,3 +63,6 @@ export const getServerSession = cache(async () => {
   });
   return session;
 });
+
+export type Session = typeof auth.$Infer.Session;
+export type AuthUser = typeof auth.$Infer.Session.user;

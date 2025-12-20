@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchCategories } from "@/app/admin/products/query";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,7 +13,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import Link from "next/link";
 
 type Props = {
-  categories: string[];
+  categories: Awaited<ReturnType<typeof fetchCategories>>;
 };
 
 export default function NavCategoriesMenu({ categories }: Props) {
@@ -25,8 +26,8 @@ export default function NavCategoriesMenu({ categories }: Props) {
           <NavigationMenuContent>
             <ul className="grid gap-2 grid-cols-5 w-max relative">
               {categories.map((c, i) => (
-                <ListItem key={i} title={c}>
-                  {c}
+                <ListItem key={i} title={c.title}>
+                  {c.title}
                 </ListItem>
               ))}
             </ul>
