@@ -1,8 +1,7 @@
-import { SearchParamsProps } from "@/types";
-import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import Products from "@/features/user/product/components/ProductList";
 import { Metadata } from "next";
-import Products from "@/features/product/components/ProductList";
+import { Suspense } from "react";
 
 export async function generateMetadata({
   searchParams,

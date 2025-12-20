@@ -20,7 +20,7 @@ import { formatToIDR } from "@/lib/utils";
 import { Truck } from "lucide-react";
 import { FormEvent, useEffect, useId, useState } from "react";
 import toast from "react-hot-toast";
-import SelectOptions from "./select-options";
+import SelectOptions from "./SelectOptions";
 import { useSession } from "@/lib/auth-client";
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
   setShippingCallback: (v: Shipping) => void;
 };
 
-export function CourierDialog({ weight, setAddressCallback, setShippingCallback }: Props) {
+export default function ShippingDialog({ weight, setAddressCallback, setShippingCallback }: Props) {
   const { data } = useSession();
   const [provinces, setProvinces] = useState<IdWithName[]>([]);
   const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
@@ -120,10 +120,10 @@ export function CourierDialog({ weight, setAddressCallback, setShippingCallback 
         </Button>
       </DialogTrigger>
       <DialogOverlay className="backdrop-blur" />
-      <DialogContent aria-describedby="sadasda" className="sm:max-w-md relative">
+      <DialogContent className="sm:max-w-md relative">
         <DialogHeader>
           <DialogTitle>Choose Courier</DialogTitle>
-          <DialogDescription aria-describedby="Your order will be sent from Riau, Pekanbaru, Bukit Raya, 4247">
+          <DialogDescription>
             Your order will be sent from Riau, Pekanbaru, Bukit Raya, 4247
           </DialogDescription>
         </DialogHeader>

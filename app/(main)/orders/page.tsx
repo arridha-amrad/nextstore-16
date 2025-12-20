@@ -1,6 +1,7 @@
-import { Suspense } from "react";
-import OrdersSuspendedComponent from "./suspended-component";
+import MidtransProvider from "@/components/MidtransProvider";
+import OrderList from "@/features/user/order/components/OrderList";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Nextstore | Orders",
@@ -8,8 +9,10 @@ export const metadata: Metadata = {
 
 export default function UserOrdersPage() {
   return (
-    <Suspense>
-      <OrdersSuspendedComponent />
-    </Suspense>
+    <MidtransProvider>
+      <Suspense>
+        <OrderList />
+      </Suspense>
+    </MidtransProvider>
   );
 }

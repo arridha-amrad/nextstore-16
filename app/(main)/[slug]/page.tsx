@@ -1,5 +1,5 @@
 import { Spinner } from "@/components/ui/spinner";
-import ProductDetail from "@/features/product/components/ProductDetail";
+import ProductDetail from "@/features/user/product/components/ProductDetail";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

@@ -1,4 +1,4 @@
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/cards/ProductCard";
 import { fetchProducts } from "../products-queries";
 import PaginationButtons from "@/components/PaginationButtons";
 

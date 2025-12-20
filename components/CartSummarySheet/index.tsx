@@ -1,14 +1,14 @@
 "use client";
 
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import CartSummary from "./cart-summary";
-import { CartItem } from "./query";
+import { CartItem } from "@/features/user/cart/cart-queries";
+import CartSummary from "./CartSummary"
 
 type Props = {
   items: CartItem[];
 };
 
-export default function CartSheet({ items }: Props) {
+export default function CartSummarySheet({ items }: Props) {
   return (
     <Sheet modal={false} open>
       <SheetContent className="py-4" side="bottom">

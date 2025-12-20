@@ -24,8 +24,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { TProductDetail } from "@/features/product/products-queries";
-import { addToCartAction } from "@/features/product/product-actions";
+import { TProductDetail } from "@/features/user/product/products-queries";
+import { addToCartAction } from "@/features/user/product/product-actions";
 
 const Context = createContext<{
   product: TProductDetail;

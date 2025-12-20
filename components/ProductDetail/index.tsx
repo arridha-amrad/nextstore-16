@@ -4,7 +4,7 @@ import { cn, rgbaDataURL } from "@/lib/utils";
 import ProductDetailContext from "./ProductDetailContext";
 import Image from "next/image";
 import { useState } from "react";
-import { TProductDetail } from "@/features/product/products-queries";
+import { TProductDetail } from "@/features/user/product/products-queries";
 
 export default function ProductDetail({
   product,

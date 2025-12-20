@@ -1,6 +1,5 @@
 import Navbar from "@/components/navbar";
 import { ChildrenProps } from "@/types";
-import { Suspense } from "react";
 
 export default async function MainLayout({ children }: ChildrenProps) {
   return (

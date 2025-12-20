@@ -5,7 +5,7 @@ import Image from "next/image";
 import { formatToIDR, rgbaDataURL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "nextjs-toploader/app";
-import { Product } from "@/features/product/products-queries";
+import { Product } from "@/features/user/product/products-queries";
 
 type Props = {
   product: Product;

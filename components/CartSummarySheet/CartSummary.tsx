@@ -1,15 +1,17 @@
 "use client";
 
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from "react";
-import { CartItem } from "./query";
+
 import { Address, Shipping } from "@/app/api/shipping/types";
 import { formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
-import { CourierDialog } from "./courier-dialog";
+import ShippingDialog from "./ShippingDialog";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { placeOrderAction } from "./action";
+
 import toast from "react-hot-toast";
+import { CartItem } from "@/features/user/cart/cart-queries";
+import { placeOrderAction } from "@/features/user/cart/cart-actions";
 
 const CartSummaryContext = createContext<{
   items: CartItem[];
@@ -73,7 +75,7 @@ CartSummary.Shipping = () => {
       </h2>
     </div>
   ) : (
-    <CourierDialog setShippingCallback={setShipping} setAddressCallback={setAddress} weight={totalWeight} />
+    <ShippingDialog setShippingCallback={setShipping} setAddressCallback={setAddress} weight={totalWeight} />
   );
 };
 

@@ -7,11 +7,11 @@ import { env } from "@/lib/env";
 import { cn, formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
 import { Ship, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { Order } from "./query";
 import { useRouter } from "nextjs-toploader/app";
-import { completeOrderAction } from "./action";
 import toast from "react-hot-toast";
-import { ReviewDialog } from "./review-dialog";
+import { ReviewDialog } from "../../app/(main)/orders/review-dialog";
+import { Order } from "@/features/user/order/order-queries";
+import { completeOrderAction } from "@/features/user/order/order-actions";
 
 type Props = {
   order: Order;

@@ -14,13 +14,14 @@ import {
   deleteCartItemAction,
   increaseQuantityAction,
   toggleCheck,
-} from "./action";
-import { CartItem } from "./query";
+} from "@/features/user/cart/cart-actions";
+import { CartItem } from "@/features/user/cart/cart-queries";
+
 
 type Props = {
   item: CartItem;
 };
-export default function CartCard({ item }: Props) {
+export default function CartItemCard({ item }: Props) {
   const updateCheck = async () => {
     await toggleCheck({ id: item.id });
   };
