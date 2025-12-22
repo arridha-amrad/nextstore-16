@@ -1,5 +1,6 @@
 import { Spinner } from "@/components/ui/spinner";
 import ProductDetail from "@/features/user/product/components/ProductDetail";
+import ProductReviews from "@/features/user/product/components/ProductReviews";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -16,8 +17,13 @@ export default async function ProductDetailPage({
   params,
 }: PageProps<"/[slug]">) {
   return (
-    <Suspense fallback={<Spinner />}>
-      <ProductDetail params={params} />
-    </Suspense>
+    <>
+      <Suspense fallback={<Spinner />}>
+        <ProductDetail params={params} />
+      </Suspense>
+      <Suspense fallback={<p>loading reviews...</p>}>
+        <ProductReviews params={params} />
+      </Suspense>
+    </>
   );
 }

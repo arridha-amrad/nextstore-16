@@ -26,6 +26,15 @@ import {
 import Image from "next/image";
 import { TProductDetail } from "@/features/user/product/products-queries";
 import { addToCartAction } from "@/features/user/product/product-actions";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "../ui/breadcrumb";
+import Link from "next/link";
 
 const Context = createContext<{
   product: TProductDetail;
@@ -50,6 +59,7 @@ const ProductDetailContext = ({
   const [counter, setCounter] = useState(0);
   return (
     <Context.Provider value={{ product, counter, setCounter }}>
+      <ProductDetailBreadcrumb />
       <div className="flex items-start gap-6">{children}</div>
     </Context.Provider>
   );
@@ -195,3 +205,28 @@ ProductDetailContext.Description = () => {
 };
 
 export default ProductDetailContext;
+
+function ProductDetailBreadcrumb() {
+  const { product } = useProductDetailContext();
+  return (
+    <Breadcrumb className="mb-8">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link href="/">Products</Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href={`/?category=${product.category?.title}`}>
+            {product.category?.title}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>{product.name}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+}

@@ -106,3 +106,31 @@ export const fetchProductBySlug = async (slug: string) => {
 export type TProductDetail = NonNullable<
   Awaited<ReturnType<typeof fetchProductBySlug>>
 >;
+
+export const fetchProductReviews = async (slug: string) => {
+  "use cache";
+  cacheTag("product reviews", slug);
+
+  const reviews = await prisma.productReview.findMany({
+    where: {
+      product: {
+        slug,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+
+  return reviews;
+};
+
+export type TReview = Awaited<ReturnType<typeof fetchProductReviews>>[number];
