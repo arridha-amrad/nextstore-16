@@ -34,7 +34,7 @@ export const reviewProductAction = authActionClient
       rating: zfd.numeric(),
       comment: zfd.text(),
       productId: zfd.text(),
-      orderId: zfd.text(),
+      orderItemId: zfd.text(),
     }),
     {
       handleValidationErrorsShape: async (ve) =>
@@ -43,20 +43,20 @@ export const reviewProductAction = authActionClient
   )
   .action(
     async ({
-      parsedInput: { rating, comment, productId, orderId },
+      parsedInput: { rating, comment, productId, orderItemId },
       ctx: { userId },
     }) => {
       await prisma.productReview.create({
         data: {
-          orderId,
           rating,
           comment,
           userId,
           productId,
+          orderItemId,
         },
       });
       updateTag(cacheKeys.orders.admin);
       updateTag(cacheKeys.orders.pending);
-      return "ok";
+      return "thank you";
     }
   );

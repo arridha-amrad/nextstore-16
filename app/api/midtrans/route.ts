@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getAfterDiscountPrice } from "@/lib/utils";
 import { Snap } from "midtrans-client";
 import { NextRequest, NextResponse } from "next/server";
+import { nanoid } from "nanoid";
 
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
@@ -52,12 +53,14 @@ export const POST = async (request: NextRequest) => {
     // Set to true if you want Production Environment (accept real transaction).
     isProduction: false,
     serverKey: env.midtransServerKey,
-    clientKey: env.midtransClientKey,
+    clientKey: env.midtransPublicClientKey,
   });
+
+  const oId = `${order.id}__${nanoid(5)}`;
 
   let parameter = {
     transaction_details: {
-      order_id: `${order.id}__${order.createdAt.getTime()}`,
+      order_id: oId,
       gross_amount: order.total,
     },
     item_details: order.orderItems

@@ -15,7 +15,7 @@ export default async function OrderList() {
     return <p>Record not found</p>;
   }
   return (
-    <div className="flex gap-4 flex-wrap">
+    <div className="grid lg:grid-cols-2 gap-4 grid-cols-1">
       {orders.map((order) => (
         <OrderCard key={order.id} order={order} />
       ))}

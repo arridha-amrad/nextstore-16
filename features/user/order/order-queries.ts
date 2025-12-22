@@ -22,6 +22,9 @@ export const fetchOrders = async ({ userId }: Params) => {
                 where: {
                   userId,
                 },
+                select: {
+                  orderItemId: true,
+                },
               },
               productImages: {
                 take: 1,

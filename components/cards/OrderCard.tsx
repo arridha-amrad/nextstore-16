@@ -9,9 +9,10 @@ import { Ship, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "nextjs-toploader/app";
 import toast from "react-hot-toast";
-import { ReviewDialog } from "../../app/(main)/orders/review-dialog";
+import { ReviewDialog } from "../dialogs/review-dialog";
 import { Order } from "@/features/user/order/order-queries";
 import { completeOrderAction } from "@/features/user/order/order-actions";
+import { useState } from "react";
 
 type Props = {
   order: Order;
@@ -30,6 +31,8 @@ const getMidtransToken = async (orderId: string) => {
 };
 
 export default function OrderCard({ order }: Props) {
+  console.log(order);
+
   const router = useRouter();
   const pay = async (orderId: string) => {
     try {
@@ -53,7 +56,7 @@ export default function OrderCard({ order }: Props) {
     }
   };
   return (
-    <Card className="w-max">
+    <Card className="flex-1">
       <CardContent className="space-y-4">
         <CardTitle className="flex items-center gap-2">
           <ShoppingBag />
@@ -67,22 +70,9 @@ export default function OrderCard({ order }: Props) {
         </CardTitle>
         <div>
           {order.orderItems.map((item) => (
-            <div className="flex items-center gap-2" key={item.id}>
-              <Link
-                href={`${env.nextPublicBaseUrl}/${item.product.slug}`}
-                className="font-bold"
-              >
-                {item.productName}
-              </Link>
-              <p className="font-light text-sm text-foreground/70">
-                {item.quantity} x{" "}
-                {formatToIDR(
-                  getAfterDiscountPrice(item.priceAtOrder, item.discountAtOrder)
-                )}
-              </p>
-            </div>
+            <OrderedProduct status={order.status} key={item.id} item={item} />
           ))}
-          <p>
+          <p className="mt-2">
             <span className="font-bold">
               Courier {order.shippingProvider}&nbsp;
             </span>
@@ -127,7 +117,6 @@ export default function OrderCard({ order }: Props) {
                 Complete
               </Button>
             )}
-            {order.status === "Completed" && <ReviewDialog order={order} />}
             {order.status === "Pending" && (
               <Button onClick={async () => await pay(order.id)}>Pay</Button>
             )}
@@ -137,3 +126,36 @@ export default function OrderCard({ order }: Props) {
     </Card>
   );
 }
+
+const OrderedProduct = ({
+  item,
+  status,
+}: {
+  item: Order["orderItems"][number];
+  status: Order["status"];
+}) => {
+  const hasReviewedThisItem = item.product.reviews.some(
+    (review) => review.orderItemId === item.id
+  );
+
+  const [isOpen, setOpen] = useState(false);
+  return (
+    <div className="flex items-center gap-2" key={item.id}>
+      <Link
+        href={`${env.nextPublicBaseUrl}/${item.product.slug}`}
+        className="font-bold"
+      >
+        {item.productName}
+      </Link>
+      <p className="font-light text-sm text-foreground/70">
+        {item.quantity} x{" "}
+        {formatToIDR(
+          getAfterDiscountPrice(item.priceAtOrder, item.discountAtOrder)
+        )}
+      </p>
+      {status === "Completed" && !hasReviewedThisItem && (
+        <ReviewDialog isOpen={isOpen} setOpen={setOpen} orderItem={item} />
+      )}
+    </div>
+  );
+};
