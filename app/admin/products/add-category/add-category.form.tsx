@@ -5,7 +5,7 @@ import { Minus, PlusIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { InputField } from "@/components/input-field";
+import { InputField } from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import {
   Card,

@@ -1,8 +1,14 @@
 "use client";
 
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { CartItem } from "@/features/user/cart/cart-queries";
-import CartSummary from "./CartSummary"
+import CartSummary from "./CartSummary";
 
 type Props = {
   items: CartItem[];

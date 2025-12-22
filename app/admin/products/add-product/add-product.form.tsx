@@ -31,7 +31,7 @@ import {
 import toast from "react-hot-toast";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import SubmitButton from "@/components/buttons/submit.button";
-import { InputField } from "@/components/input-field";
+import { InputField } from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import {
   Card,

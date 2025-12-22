@@ -8,6 +8,7 @@ import { unauthorized } from "next/navigation";
 export class MyCustomError extends Error {}
 
 export const actionClient = createSafeActionClient({
+  defaultValidationErrorsShape: "flattened",
   handleServerError: (err) => {
     if (err instanceof MyCustomError) {
       return err.message;

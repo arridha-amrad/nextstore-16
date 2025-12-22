@@ -1,7 +1,7 @@
 "use client";
 
 import { Address, IdWithName, Shipping } from "@/app/api/shipping/types";
-import { InputField, TextareaField } from "@/components/input-field";
+import { InputField, TextareaField } from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +22,7 @@ import { FormEvent, useEffect, useId, useState } from "react";
 import toast from "react-hot-toast";
 import SelectOptions from "./SelectOptions";
 import { useSession } from "@/lib/auth-client";
+import { Card, CardContent } from "../ui/card";
 
 type Props = {
   weight: number;
@@ -29,14 +30,22 @@ type Props = {
   setShippingCallback: (v: Shipping) => void;
 };
 
-export default function ShippingDialog({ weight, setAddressCallback, setShippingCallback }: Props) {
+export default function ShippingDialog({
+  weight,
+  setAddressCallback,
+  setShippingCallback,
+}: Props) {
   const { data } = useSession();
   const [provinces, setProvinces] = useState<IdWithName[]>([]);
-  const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
+  const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(
+    null
+  );
   const [cities, setCities] = useState<IdWithName[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<string | null>(null);
   const [districts, setDistricts] = useState<IdWithName[]>([]);
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(null);
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(
+    null
+  );
   const [address, setAddress] = useState("");
   const [availableCouriers, setAvailableCouriers] = useState<Shipping[]>([]);
   const [isOpen, setOpen] = useState(false);
@@ -60,7 +69,9 @@ export default function ShippingDialog({ weight, setAddressCallback, setShipping
 
   useEffect(() => {
     if (selectedProvinceId) {
-      fetch(`${env.nextPublicBaseUrl}/api/shipping?fetchType=cities&provinceId=${selectedProvinceId}`)
+      fetch(
+        `${env.nextPublicBaseUrl}/api/shipping?fetchType=cities&provinceId=${selectedProvinceId}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setCities(data);
@@ -70,7 +81,9 @@ export default function ShippingDialog({ weight, setAddressCallback, setShipping
 
   useEffect(() => {
     if (selectedCityId) {
-      fetch(`${env.nextPublicBaseUrl}/api/shipping?fetchType=districts&cityId=${selectedCityId}`)
+      fetch(
+        `${env.nextPublicBaseUrl}/api/shipping?fetchType=districts&cityId=${selectedCityId}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setDistricts(data);
@@ -80,14 +93,23 @@ export default function ShippingDialog({ weight, setAddressCallback, setShipping
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!selectedProvinceId || !selectedCityId || !selectedDistrictId || address === "") {
+    if (
+      !selectedProvinceId ||
+      !selectedCityId ||
+      !selectedDistrictId ||
+      address === ""
+    ) {
       toast.error("Please complete the form");
       return;
     }
     setAddressCallback({
-      province: provinces.find((p) => p.id === parseInt(selectedProvinceId))?.name ?? "",
+      province:
+        provinces.find((p) => p.id === parseInt(selectedProvinceId))?.name ??
+        "",
       city: cities.find((p) => p.id === parseInt(selectedCityId))?.name ?? "",
-      district: districts.find((p) => p.id === parseInt(selectedDistrictId))?.name ?? "",
+      district:
+        districts.find((p) => p.id === parseInt(selectedDistrictId))?.name ??
+        "",
       address,
       phoneNumber,
       fullname,
@@ -120,7 +142,7 @@ export default function ShippingDialog({ weight, setAddressCallback, setShipping
         </Button>
       </DialogTrigger>
       <DialogOverlay className="backdrop-blur" />
-      <DialogContent className="sm:max-w-md relative">
+      <DialogContent className="sm:max-w-md w-full">
         <DialogHeader>
           <DialogTitle>Choose Courier</DialogTitle>
           <DialogDescription>
@@ -198,7 +220,11 @@ type OptionsProps = {
   close: VoidFunction;
   setShippingCallback: (v: Shipping) => void;
 };
-const CourierOptions = ({ options, close, setShippingCallback }: OptionsProps) => {
+const CourierOptions = ({
+  options,
+  close,
+  setShippingCallback,
+}: OptionsProps) => {
   const [value, setValue] = useState<string | null>(null);
   return (
     <div className="space-y-4 mt-6">
@@ -225,17 +251,21 @@ const CourierOptions = ({ options, close, setShippingCallback }: OptionsProps) =
 const Option = ({ shipping }: { shipping: Shipping }) => {
   const id = useId();
   return (
-    <div className="flex items-start gap-x-4">
+    <div className="flex items-start gap-x-4 border p-4 rounded-xl">
       <RadioGroupItem value={JSON.stringify(shipping)} id={id} />
-      <div className="space-y-1">
-        <Label htmlFor={id}>
-          {shipping.name} ({shipping.service})
-        </Label>
-        <p className="text-sm font-light text-foreground/60">{shipping.description}</p>
-        <p className="text-sm">
-          {formatToIDR(shipping.cost)} &middot; <span className="italic">{shipping.etd}</span>
-        </p>
-      </div>
+      <Label
+        className="space-y-1 w-full flex flex-col gap-1 items-start"
+        htmlFor={id}
+      >
+        {shipping.name} ({shipping.service})
+        <span className="text-sm font-light text-foreground/60">
+          {shipping.description}
+        </span>
+        <span className="text-sm">
+          {formatToIDR(shipping.cost)} &middot;{" "}
+          <span className="italic">{shipping.etd}</span>
+        </span>
+      </Label>
     </div>
   );
 };

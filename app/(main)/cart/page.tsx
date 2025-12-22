@@ -1,3 +1,4 @@
+import CartSummarySheet from "@/components/CartSummarySheet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import CartItemList from "@/features/user/cart/components/CartItemList";
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
 
 const SkeletonUI = () => {
   return (
-    <div className="flex items-center gap-4 flex-wrap">
-      {[...Array(3)].map((_, index) => (
+    <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4">
+      {[...Array(9)].map((_, index) => (
         <Card className="flex-1" key={index}>
           <CardContent className="flex items-start gap-4">
             <Skeleton className="w-5 aspect-square rounded-full" />
@@ -27,15 +28,16 @@ const SkeletonUI = () => {
       ))}
     </div>
   );
-}
+};
 
 export default async function UserCartPage({
   searchParams,
 }: PageProps<"/cart">) {
-
   return (
-    <Suspense fallback={<SkeletonUI />}>
-      <CartItemList searchParams={searchParams} />
-    </Suspense>
+    <div className="relative">
+      <Suspense fallback={<SkeletonUI />}>
+        <CartItemList searchParams={searchParams} />
+      </Suspense>
+    </div>
   );
 }

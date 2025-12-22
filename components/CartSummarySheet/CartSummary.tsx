@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
 import { Address, Shipping } from "@/app/api/shipping/types";
 import { formatToIDR, getAfterDiscountPrice } from "@/lib/utils";
@@ -29,11 +36,16 @@ const useCartSummaryContext = () => {
   return ctx;
 };
 
-function CartSummary({ items, children }: PropsWithChildren<{ items: CartItem[] }>) {
+function CartSummary({
+  items,
+  children,
+}: PropsWithChildren<{ items: CartItem[] }>) {
   const [address, setAddress] = useState<Address | null>(null);
   const [shipping, setShipping] = useState<Shipping | null>(null);
   return (
-    <CartSummaryContext.Provider value={{ items, address, setAddress, shipping, setShipping }}>
+    <CartSummaryContext.Provider
+      value={{ items, address, setAddress, shipping, setShipping }}
+    >
       <div className="flex items-center justify-center gap-x-8">{children}</div>
     </CartSummaryContext.Provider>
   );
@@ -43,7 +55,11 @@ CartSummary.SubTotal = () => {
   const { items } = useCartSummaryContext();
   const subTotal = items
     .filter((item) => item.isSelected)
-    .map((item) => item.quantity * getAfterDiscountPrice(item.product.price, item.product.discount))
+    .map(
+      (item) =>
+        item.quantity *
+        getAfterDiscountPrice(item.product.price, item.product.discount)
+    )
     .reduce((cv, pv) => {
       pv += cv;
       return pv;
@@ -75,7 +91,11 @@ CartSummary.Shipping = () => {
       </h2>
     </div>
   ) : (
-    <ShippingDialog setShippingCallback={setShipping} setAddressCallback={setAddress} weight={totalWeight} />
+    <ShippingDialog
+      setShippingCallback={setShipping}
+      setAddressCallback={setAddress}
+      weight={totalWeight}
+    />
   );
 };
 
@@ -83,7 +103,11 @@ CartSummary.Total = () => {
   const { items, shipping } = useCartSummaryContext();
   const subTotal = items
     .filter((item) => item.isSelected)
-    .map((item) => item.quantity * getAfterDiscountPrice(item.product.price, item.product.discount))
+    .map(
+      (item) =>
+        item.quantity *
+        getAfterDiscountPrice(item.product.price, item.product.discount)
+    )
     .reduce((cv, pv) => {
       pv += cv;
       return pv;

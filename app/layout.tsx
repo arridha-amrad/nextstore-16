@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import NextTopLoader from "nextjs-toploader";
-import { env } from "@/lib/env";
 
-const geistSans = Geist({
+const geistSans = Roboto({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
@@ -27,16 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-        <script
-          type="text/javascript"
-          src="https://app.sandbox.midtrans.com/snap/snap.js"
-          data-client-key={env.midtransPublicClientKey}
-        ></script>
-      </head> */}
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* <div id="snap-container"></div> */}
+      <body
+        className={`${geistSans.className} ${geistMono.variable} antialiased`}
+      >
         <NextTopLoader showSpinner={false} color="#fdc700" />
         <ThemeProvider>{children}</ThemeProvider>
       </body>

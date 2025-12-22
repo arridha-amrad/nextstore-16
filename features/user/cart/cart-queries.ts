@@ -2,7 +2,7 @@ import { cacheKeys } from "@/cache-keys";
 import prisma from "@/lib/prisma";
 import { cacheTag } from "next/cache";
 
-const LIMIT = 10;
+const LIMIT = 9;
 
 type Params = {
   userId: string;
@@ -13,10 +13,24 @@ export const fetchCart = async ({ userId, page = 1 }: Params) => {
   "use cache";
   cacheTag(cacheKeys.carts);
 
-  const totalPage = await prisma.cart.count({
+  const cart = await prisma.cart.findUnique({
     where: {
       userId,
     },
+    select: {
+      _count: {
+        select: {
+          cartItems: true,
+        },
+      },
+    },
+    // include: {
+    //   _count: {
+    //     select: {
+    //       cartItems: true,
+    //     },
+    //   },
+    // },
   });
 
   const result = await prisma.cart.findUnique({
@@ -53,7 +67,7 @@ export const fetchCart = async ({ userId, page = 1 }: Params) => {
 
   return {
     cart: result,
-    totalPage,
+    total: cart?._count.cartItems ?? 0,
     itemsPerPage: LIMIT,
   };
 };

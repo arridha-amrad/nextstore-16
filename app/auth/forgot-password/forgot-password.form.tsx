@@ -33,7 +33,7 @@ export default function ForgotPasswordForm({
       await requestPasswordReset(
         {
           email,
-          redirectTo: `${env.baseUrl}/reset-password`,
+          redirectTo: `${env.nextPublicBaseUrl}/reset-password`,
         },
         {
           onSuccess: () => {

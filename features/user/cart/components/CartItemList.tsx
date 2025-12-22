@@ -3,17 +3,17 @@ import { fetchCart } from "../cart-queries";
 import { getServerSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import CartSheet from "@/components/CartSummarySheet";
+import PaginationButtons from "@/components/PaginationButtons";
 
 type SearchParams = {
   page?: string;
-}
+};
 
 type Props = {
   searchParams: Promise<SearchParams>;
 };
 
 export default async function CartItemList({ searchParams }: Props) {
-
   const resolvedSearchParams = await searchParams;
   const { page } = resolvedSearchParams;
 
@@ -22,7 +22,10 @@ export default async function CartItemList({ searchParams }: Props) {
     redirect("/auth/signin?callbackUrl=/cart");
   }
 
-  const { cart } = await fetchCart({ userId: session.user.id, page: page ? parseInt(page) : 1 });
+  const { cart, itemsPerPage, total } = await fetchCart({
+    userId: session.user.id,
+    page: page ? parseInt(page) : 1,
+  });
 
   if (!cart || cart.cartItems.length === 0) {
     return <p>cart is empty</p>;
@@ -34,6 +37,9 @@ export default async function CartItemList({ searchParams }: Props) {
         {cart?.cartItems.map((item) => (
           <CartItemCard key={item.id} item={item} />
         ))}
+      </div>
+      <div className="mt-8">
+        <PaginationButtons itemsPerPage={itemsPerPage} totalRecords={total} />
       </div>
       <CartSheet items={cart.cartItems} />
     </>

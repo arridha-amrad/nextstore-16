@@ -1,6 +1,6 @@
 "use client";
 
-import { TextareaField } from "@/components/input-field";
+import { TextareaField } from "@/components/InputField";
 import StarRating from "@/components/star-rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
