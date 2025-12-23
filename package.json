@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm install && npx prisma generate && next build",
+    "build": "next build",
     "dev:ngrok": "ngrok http --url=katy-illegible-min.ngrok-free.app 3000",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
