@@ -1,3 +1,4 @@
+import ProductCardSkeleton from "@/components/cards/ProductCard.Skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import Products from "@/features/user/product/components/ProductList";
 import { Metadata } from "next";
@@ -34,10 +35,20 @@ export async function generateStaticParams() {
   ];
 }
 
+const SkeletonUI = () => {
+  return (
+    <div className="grid xl:grid-cols-5 lg:grid-cols-3 grid-cols-1 gap-4">
+      {[...Array(10)].map((_, index) => (
+        <ProductCardSkeleton key={index} />
+      ))}
+    </div>
+  );
+};
+
 export default async function Page({ searchParams }: PageProps<"/">) {
   return (
     <main className="container mx-auto">
-      <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<SkeletonUI />}>
         <Products searchParams={searchParams} />
       </Suspense>
     </main>

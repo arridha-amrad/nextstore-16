@@ -48,14 +48,14 @@ const ProductImage = ({ images }: { images: string[] }) => {
               alt={v}
               width={100}
               height={100}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         ))}
       </div>
       <div className="flex-1 border border-input rounded-md aspect-square">
         <Image
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
           src={images[currentImage]}
           alt={images[currentImage]}
           width={500}

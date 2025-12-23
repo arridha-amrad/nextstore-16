@@ -1,6 +1,4 @@
-import CartSummarySheet from "@/components/CartSummarySheet";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import OrderItemCardSkeleton from "@/components/cards/OrderItemCard.Skeleton";
 import CartItemList from "@/features/user/cart/components/CartItemList";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -14,17 +12,7 @@ const SkeletonUI = () => {
   return (
     <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-4">
       {[...Array(9)].map((_, index) => (
-        <Card className="flex-1" key={index}>
-          <CardContent className="flex items-start gap-4">
-            <Skeleton className="w-5 aspect-square rounded-full" />
-            <Skeleton className="w-24 aspect-square rounded-full" />
-            <div className="mt-1 space-y-2 w-full">
-              <Skeleton className="w-full h-5" />
-              <Skeleton className="w-full h-5" />
-              <Skeleton className="w-full h-5" />
-            </div>
-          </CardContent>
-        </Card>
+        <OrderItemCardSkeleton key={index} />
       ))}
     </div>
   );

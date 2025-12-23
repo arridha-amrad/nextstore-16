@@ -17,7 +17,6 @@ import {
 } from "@/features/user/cart/cart-actions";
 import { CartItem } from "@/features/user/cart/cart-queries";
 
-
 type Props = {
   item: CartItem;
 };
@@ -38,7 +37,9 @@ export default function CartItemCard({ item }: Props) {
           className="object-cover aspect-square"
         />
         <div className="mt-1 space-y-2">
-          <Link href={`/${item.product.slug}`}>{item.product.name}</Link>
+          <Link className="line-clamp-1" href={`/${item.product.slug}`}>
+            {item.product.name}
+          </Link>
           <div className="flex mt-2 items-center gap-4">
             <p>
               {formatToIDR(

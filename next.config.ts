@@ -24,6 +24,14 @@ const nextConfig: NextConfig = {
         hostname: "cdn.jsdelivr.net",
         protocol: "https",
       },
+      {
+        hostname: "c1.neweggimages.com",
+        protocol: "https",
+      },
+      {
+        hostname: "ik.imagekit.io",
+        protocol: "https",
+      },
     ],
   },
 };

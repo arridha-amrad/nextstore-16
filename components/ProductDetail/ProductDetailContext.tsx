@@ -93,18 +93,6 @@ ProductDetailContext.Carousel = ({ images }: { images: string[] }) => {
   );
 };
 
-function Description() {
-  const { product } = useProductDetailContext();
-  return (
-    product.descriptionHtml && (
-      <div
-        className="mt-4"
-        dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
-      />
-    )
-  );
-}
-
 ProductDetailContext.Price = function Price() {
   const { product } = useProductDetailContext();
   return (
