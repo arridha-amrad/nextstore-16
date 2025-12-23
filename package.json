@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx prisma generate && next build",
+    "build": "pnpm install && npx prisma generate && next build",
     "dev:ngrok": "ngrok http --url=katy-illegible-min.ngrok-free.app 3000",
     "start": "next start",
     "lint": "eslint"
